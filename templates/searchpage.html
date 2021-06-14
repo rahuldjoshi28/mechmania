@@ -1,0 +1,521 @@
+<html>
+	<title>Welcome to MechMania!</title>
+	<head>
+		{% load staticfiles %}
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<link id="fontsCSS" rel="stylesheet" type="text/css" href="{% static 'fonts/fonts.css' %}" />
+		<link id="bsCSS" rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}" />
+		<link id="cusCSS" rel="stylesheet" type="text/css" href="{% static 'css/internshipsandvisits.css' %}" />
+		<link type="text/css" href="{% static 'css/jscrollpane.css' %}" rel="stylesheet" media="all" />
+
+		<script src="{% static 'js/jquery-3.2.1.min.js' %}" type="text/javascript"></script>
+		<script src="{% static 'js/bootstrap.bundle.min.js' %}" type="text/javascript"></script>
+		<script src="{% static 'js/fontawesome-all.min.js' %}" type="text/javascript"></script>
+		<script src="{% static 'js/mousewheel.js' %}" type="text/javascript"></script>
+		<script src="{% static 'js/jscrollpane.min.js' %}" type="text/javascript"></script>
+
+		<script src="{% static 'js/title_notifications.js' %}" type="text/javascript"></script>
+		<script src="{% static 'js/imageErrorHandle.js' %}" type="text/javascript"></script>
+	</head>
+	<body class="custom-font" id="bootstrap-override-id">
+		{% include "menubar.html" %}
+
+		<!--Internships and visits block-->
+		<style>
+				#bootstrap-override-id .nav-item .active {
+					background-color:#2f3238;
+					color:#ffffff;
+				}
+		</style>
+		<div class="col-md-12" style="background-color:#232221">
+			<br><br><br><br><br>
+			<div class="col-md-12">
+				<div class="col-md-12">
+				<script>
+					function applyFor(pk){
+						{% if user.is_authenticated %}
+							var method = 'GET';
+							var a = document.createElement("a");
+							a.setAttribute("href","http://127.0.0.1:8000/internships/applyInternship?industry="+pk);
+							document.body.appendChild(a);
+							a.click();
+						{% else %}
+							window.location = "/loginsignup.html";
+							//goDetailsPage(pk);
+						{% endif %}
+					}
+				</script>
+					<div class="col-md-12" style="color:#ffffff">
+						<h1>Internships</h1>
+					</div>
+					<div class="col-md-12" style="color:#ffffff">
+					<!--Internships-->
+					  <div class="text-center" id="internships">
+							<script>console.log("{{internships}}"); </script>
+							{% if internships|length == 0 %}
+								<div class="col-md-12 text-center">No internships found!</div>
+							{% endif %}
+							{% for intern in internships %}
+							<br>
+							<div class="col-md-12 row nomargin" style="box-shadow:0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12); padding-top:15px; padding-bottom:15px; background-color:#2f3238;">
+								<div class="col-md-3 nopadding">
+									<a href="/industry/{{intern.indname}}/"><img width="100%" src="{% static intern.logo %}" alt="{{intern.indname}}"></a>
+								</div>
+								<div class="col-md-6 text-left" style="color:#ffffff;">
+									<div class="col-md-12">
+										<div class="row nomargin" style="cursor:pointer;" onclick="location.href='/industry/{{intern.indname}}/'"><h3>{{intern.indname}}&nbsp;</h3><h6><i class="fas fa-external-link-alt" style="color:#5bc0de"></i></h6></div>
+										<br>
+										<p>{{intern.description}}</p>
+									</div>
+								</div>
+								<div class="col-md-3 text-left">
+									<div class="col-md-12">
+									{% if intern.allowed == intern.pk%}
+										<!-- confirmed -->
+										<h3 class="text-right"><button class="btn btn-outline-info btn-sm"><i class="fas fa-thumbs-up"></i>&nbsp;&nbsp;Confirmed</button></h3>
+									{% elif intern.allowed > 0 %}
+										<!-- Cannot apply -->
+										<h3 class="text-right"><button class="btn btn-outline-secondary btn-sm" style="cursor:pointer;" onclick="alert('Oops! Looks like you already have a confirmed internship! You can get only one internship at a time.')"><i class="fas fa-exclamation-circle"></i>&nbsp;&nbsp;Can not apply</button></h3>
+									{% elif intern.applied == 1 %}
+										<!-- Already applied -->
+										<h3 class="text-right"><button class="btn btn-outline-warning btn-sm" style="cursor:pointer;" onclick="alert('You have already apllied for this internship. Kindly wait for the confirmation from industry. Till then you can apply for other internships!')"><i class="fas fa-exclamation-circle"></i>&nbsp;&nbsp;Already applied</button></h3>
+									{% else %}
+										<!-- Apply -->
+										<h3 class="text-right"><button class="btn btn-outline-success btn-sm" style="cursor:pointer;" onclick="applyFor({{intern.pk}})"><i class="fas fa-check-circle"></i>&nbsp;&nbsp;Click to apply</button></h3>
+									{% endif %}
+										<br>
+										<p><i style="color:#de5e60" class="far fa-calendar-alt"></i>&nbsp;&nbsp;{{intern.startdate}} to {{intern.enddate}}</p>
+										<p><i style="color:#de5e60" class="fas fa-cogs"></i>&nbsp;&nbsp;{{intern.type}}</p>
+										<p><i style="color:#de5e60" class="fas fa-rupee-sign"></i>&nbsp;&nbsp;{{intern.stipend}}/month</p>
+									</div>
+								</div>
+							</div>
+							<br>
+							{% endfor %}
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<br><div class="col-md-10 offset-md-1" style="border-bottom:2px solid #999999;"></div><br>
+			<div class="col-md-12">
+				<div class="col-md-12">
+					<div class="col-md-12" style="color:#ffffff">
+						<h1>Industrial Visits</h1>
+					</div>
+					<div class="col-md-12" style="color:#ffffff">
+						<!--Industrial visits-->
+						<div class="text-center" id="industrialvisits">
+							{% if ivs.data|length == 0 %}
+								<div class="col-md-12 text-center">No industrial visits found!</div>
+							{% endif %}
+						{% for iv in ivs.data %}
+							<br>
+							<div class="col-md-12 row nomargin" style="box-shadow:0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12); padding-top:15px; padding-bottom:15px; background-color:#2f3238;">
+								<div class="col-md-3 nopadding">
+									<a href="/industry/{{iv.indname}}/"><img width="100%" src="{% static iv.logo %}" alt="{{iv.data.indname}}"></a>
+								</div>
+								<div class="col-md-6 text-left" style="color:#ffffff;">
+									<div class="col-md-12">
+										<div class="row nomargin" style="cursor:pointer;" onclick="location.href='/industry/{{iv.indaname}}/'"><h3>{{iv.indname}}&nbsp;</h3><h6><i class="fas fa-external-link-alt" style="color:#5bc0de"></i></h6></div>
+										<br>
+										<p>{{iv.description}}</p>
+									</div>
+								</div>
+								<div class="col-md-3 text-left">
+									<div class="col-md-12">
+										{% if ivs.confid > 0 %}
+											{% if ivs.confid == iv.pk %}
+												<!-- Confirmed -->
+												<h3 class="text-right"><button class="btn btn-outline-info btn-sm"><i class="fas fa-thumbs-up"></i>&nbsp;&nbsp;Confirmed</button></h3>
+											{% else %}
+												<!-- Cannot apply -->
+												<h3 class="text-right"><button class="btn btn-outline-secondary btn-sm" style="cursor:pointer;" onclick="alert('Oops! Looks like you already have a confirmed industrial visit! You can get only one industrial visit at a time.')"><i class="fas fa-exclamation-circle"></i>&nbsp;&nbsp;Can not apply</button></h3>
+											{% endif %}
+										{% else %}
+											{% if ivs.applied > 0 %}
+												{% if ivs.applied == iv.pk %}
+													<!-- Already applied -->
+													<h3 class="text-right"><button class="btn btn-outline-warning btn-sm" style="cursor:pointer;" onclick="alert('You have already apllied for this industrial visit. Kindly wait for the confirmation from industry. Till then you can apply for other industrial visits!')"><i class="fas fa-exclamation-circle"></i>&nbsp;&nbsp;Already applied</button></h3>
+												{% else %}
+													<!-- Cannot apply -->
+													<h3 class="text-right"><button class="btn btn-outline-secondary btn-sm" style="cursor:pointer;" onclick="alert('Oops! Looks like you already have applied for industrial visit! You can get only one industrial visit at a time.')"><i class="fas fa-exclamation-circle"></i>&nbsp;&nbsp;Can not apply</button></h3>
+												{% endif %}
+											{% else %}
+												<!-- Apply -->
+												<h3 class="text-right"><button class="btn btn-outline-success btn-sm" style="cursor:pointer;" onclick="location.href='/internships/applyIV/{{iv.pk}}'"><i class="fas fa-check-circle"></i>&nbsp;&nbsp;Click to apply</button></h3>
+											{% endif %}
+										{% endif %}
+										<br>
+										<p><i style="color:#de5e60" class="far fa-calendar-alt"></i>&nbsp;&nbsp;{{iv.duration}}</p>
+										<p><i style="color:#de5e60" class="fas fa-cogs"></i>&nbsp;&nbsp;{{iv.type}}</p>
+										<p><i style="color:#de5e60" class="fas fa-users"></i>&nbsp;&nbsp;{{iv.mincnt}} students</p>
+									</div>
+								</div>
+							</div>
+						{% endfor %}
+						</div>
+					</div>
+				</div>
+			</div>
+			<br><br><div class="col-md-10 offset-md-1" style="border-bottom:2px solid #999999;"></div><br>
+			<div class="col-md-12" style="color:#ffffff;">
+				<div class="col-md-12">
+					<div class="col-md-12" style="color:#ffffff">
+						<h1>Recruitments</h1>
+					</div>
+					{% if recruitments.data|length == 0 %}
+						<div class="col-md-12 text-center">No recruitments found!</div>
+					{% endif %}
+					{% for ind in recruitments.data %}
+						<br>
+						<div class="col-md-12" style="box-shadow:0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12); padding-top:15px; padding-bottom:15px; background-color:#2f3238;">
+							<div class="col-md-12 row nomargin">
+								<div class="col-md-3 nopadding">
+									<a href="/industry/{{ind.indname}}/"><img width="100%" src="{% static ind.logo %}" alt="{{ind.indname}}"></a>
+								</div>
+								<div class="col-md-6 text-left" style="color:#ffffff;">
+									<div class="col-md-12">
+										<div class="row nomargin" style="cursor:pointer;" onclick="location.href='/industry/{{ind.indname}}/'"><h3>{{ind.indname}}&nbsp;</h3><h6><i class="fas fa-external-link-alt" style="color:#5bc0de"></i></h6></div>
+										<br>
+										<p>{{ind.description}}</p>
+									</div>
+								</div>
+								<div class="col-md-3 text-left">
+									<div class="col-md-12">
+										<br><br><br>
+										<p><i style="color:#de5e60" class="fas fa-list-ol"></i>&nbsp;&nbsp;{{ind.recruitments|length}} Recruitments</p>
+										<p><i style="color:#de5e60" class="fas fa-map-marker"></i>&nbsp;&nbsp;{{ind.address}}</p>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<br>
+								<button style="color:#ffffff; cursor:pointer; background-color:#2f3238; border:none;" class="btn col-md-12" data-toggle="collapse" href="#collapseIndustry{{ind.pk}}" aria-expanded="false" aria-controls="collapseIndustry{{ind.pk}}">
+									<i class="fas fa-chevron-down"></i>
+								</button>
+								<div class="collapse" id="collapseIndustry{{ind.pk}}">
+										<br>
+										<div class="card-columns">
+										{% for rec in ind.recruitments %}
+											<div class="card text-center" style="background-color:#232221;">
+											  <div class="card-header">
+												<h5>{{rec.type}}</h5>
+													<div style="border-bottom:1px solid #de5e60;" class="col-md-4 offset-md-4"></div>
+											  </div>
+											  <div class="card-block" style="background-color:#282625;">
+													<br>
+													<div class="col-md-12">
+													<p class="card-text">{{rec.description}}</p>
+													</div>
+													<br>
+													<ul class="text-left">
+														<i style="color:#de5e60" class="fas fa-graduation-cap"></i>&nbsp;&nbsp;Qualifications:
+														<div class="col-md-8 offset-md-2">
+															{{rec.qualifications}}
+														</div>
+													</ul>
+											  </div>
+											  <div class="card-footer">
+												{% if recruitments.applicable == 1 %}
+													{% if rec.applied == 1 %}
+														<!-- Already applied -->
+														<button class="btn btn-outline-warning btn-sm" style="cursor:pointer;" onclick="alert('You have already apllied for this recruitment. Kindly wait for the confirmation from industry. Till then you can apply for other posts!')"><i class="fas fa-exclamation-circle"></i>&nbsp;&nbsp;Already applied</button>
+													{% else %}
+														<!-- apply -->
+														<button class="btn btn-outline-success btn-sm" style="cursor:pointer;" onclick="location.href='#'"><i class="fas fa-check-circle"></i>&nbsp;&nbsp;Click to apply</button>
+													{% endif %}
+												{% else %}
+													{% if rec.confirmed == 1 %}
+														<!-- Confirmed -->
+														<button class="btn btn-outline-info btn-sm"><i class="fas fa-thumbs-up"></i>&nbsp;&nbsp;Confirmed</button></h3>
+													{% else %}
+														<!-- Cannot Apply -->
+														<h3 class="text-right"><button class="btn btn-outline-secondary btn-sm" style="cursor:pointer;" onclick="alert('Oops! Looks like you already have a confirmed internship! You can get only one internship at a time.')"><i class="fas fa-exclamation-circle"></i>&nbsp;&nbsp;Can not apply</button></h3>
+													{% endif %}
+												{% endif %}
+											  </div>
+											</div>
+										{% endfor %}
+										</div>
+								</div>
+							</div>
+						</div>
+					{% endfor %}
+					<br>
+				</div>
+			</div>
+			<br><br>
+			<!-- projects -->
+			<div class="col-md-12">
+				<div class="col-md-12" style="color:#ffffff">
+					<h1>Industrial Projects</h1>
+				</div>
+
+				<!--Projects-->
+				{% if projectData.projects|length == 0 %}
+					<div class="col-md-12 text-center" style="color:#ffffff;"><h5>No projects found!</h5></div>
+					<br>
+				{% endif %}
+				{% for d in projectData.projects %}
+				<div class="col-md-12" style="color:#ffffff;">
+				  <div class="col-md-12">
+						<br>
+						<div class="col-md-12" style="box-shadow:0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12); padding-top:15px; padding-bottom:15px; background-color:#2f3238;">
+							<div class="col-md-12 row nomargin">
+								<div class="col-md-3 nopadding">
+									<a href="/industry/{{d.0.name}}/"><img width="100%" src="{% static d.0.logo %}" alt="{{d.0.name}}"></a>
+								</div>
+								<div class="col-md-9 text-left" style="color:#ffffff;">
+									<div class="col-md-12">
+										<div class="row nomargin" style="cursor:pointer;" onclick="location.href='/industry/Google/'"><h3>{{d.0.name}}&nbsp;</h3><h6><i class="fas fa-external-link-alt" style="color:#5bc0de"></i></h6></div>
+										<br>
+										<p>{{d.0.description}}</p>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<br>
+								<button style="color:#ffffff; cursor:pointer; background-color:#2f3238; border:none;" class="btn col-md-12" data-toggle="collapse" href="#collapseIndustryId" aria-expanded="false" aria-controls="collapseIndustryId">
+									<i class="fas fa-chevron-down"></i>
+								</button>
+								{% for project in d.1 %}
+								<div class="collapse" id="collapseIndustryId">
+										<br>
+										<div class="card-columns">
+											<div class="card text-center" style="background-color:#232221;">
+											  <div class="card-header">
+												<h5>{{ project.0.type }}</h5>
+													<div style="border-bottom:1px solid #de5e60;" class="col-md-4 offset-md-4"></div>
+											  </div>
+											  <div class="card-block" style="background-color:#282625;">
+													<br>
+													<div class="col-md-12">
+													<p class="card-text">{{ project.0.description }}</p>
+													</div>
+													<br>
+													<h6><i style="color:#de5e60" class="fas fa-list-ol"></i>&nbsp;&nbsp;{{ project.0.number }} Projects</h6>
+													<h6><i style="color:#de5e60" class="fas fa-users"></i>&nbsp;&nbsp;{{ project.0.minimumCnt }} students</h6>
+											  </div>
+											  <div class="card-footer">
+											  {% if project.1 == 'apply' and projectData.admin == 'no' and projectData.capply == 'no'%}
+												<button class="btn btn-outline-success btn-sm" style="cursor:pointer;" onclick="location.href='/projects/apply/{{project.0.pk}}/'"><i class="fas fa-check-circle"></i>&nbsp;&nbsp;Click to apply</button>
+											  {% endif %}
+											  {% if project.1 == 'applied' and projectData.admin == 'no' and projectData.capply == 'no'%}
+											  <button class="btn btn-outline-warning btn-sm" style="cursor:pointer;" onclick="alert('You have already apllied for this project. Kindly wait for the confirmation from industry. Till then you can apply for other projects!');location.href='/projects/groupInfo/{{project.0.pk}}/'"><i class="fas fa-exclamation-circle"></i>&nbsp;&nbsp;Already applied</button>
+											  {% endif %}
+											  {% if project.1 == 'confirmed' and projectData.admin == 'no' and projectData.capply == 'no'%}
+											  <button class="btn btn-outline-info btn-sm"><i class="fas fa-thumbs-up"></i>&nbsp;&nbsp;Confirmed</button>
+											  {% endif %}
+											  {% if projectData.capply == 'yes' %}
+											  <button class="btn btn-outline-secondary btn-sm" style="cursor:pointer;" onclick="alert('Oops! Looks like you already have a confirmed project! You can get only one project at a time.')"><i class="fas fa-exclamation-circle"></i>&nbsp;&nbsp;Can not apply</button>
+											  {% endif %}
+											  {% if projectData.admin == 'yes' %}
+												<button class="btn btn-outline-success btn-sm" style="cursor:pointer;" onclick="location.href='/projects/listOfApplicants/{{project.0.pk}}/'"><i class="fas fa-check-circle"></i>&nbsp;&nbsp;click to see aplicants</button>
+											  {% endif %}
+											  </div>
+											</div>
+										</div>
+								</div>
+								{% endfor %}
+							</div>
+						</div>
+						<br>
+					</div>
+					<br>
+				</div>
+				{% endfor %}
+			</div>
+			<br><br>
+			<!-- Question papers -->
+			<br><div class="col-md-10 offset-md-1" style="border-bottom:2px solid #999999;"></div><br>
+			<script>
+			jQuery("document").ready(function($){
+			$(".smoothScroll").click(function(event){
+				event.preventDefault();
+				$('html,body').animate({scrollTop:$(this.hash).offset().top}, 1000);
+			});
+
+			jQuery( 'div[style="text-align: right;position: fixed;z-index:9999999;bottom: 0; width: 100%;cursor: pointer;line-height: 0;"]' ).remove();
+		});
+				function downloadPDF(id){
+						alert(id);
+						{% if user.is_authenticated %}
+							$.post('/questionPapers/show/',{
+								'id':id,
+								'csrfmiddlewaretoken': '{{ csrf_token }}'},
+								function(data){
+									JSON.stringify(data);
+									viewPDF(data);
+								});
+						{% else %}
+							window.location = '/loginsignup.html';
+						{% endif %}
+					}
+
+					function closePdf()
+					{
+						var list = document.getElementsByClassName('pdfContainer');
+
+						while(list[0]) {
+							list[0].parentNode.removeChild(list[0]);
+						}
+
+						document.getElementsByClassName('outerPdfContainer')[0].style.display="none";
+					}
+
+					{% if user.is_authenticated %}
+						function viewPDF(name){
+							   var iframe = document.createElement('iframe');
+							   iframe.width="100%";
+							   iframe.height="100%";
+							   iframe.id="iframewindow";
+							   iframe.className = "pdfViewer";
+							   iframe.setAttribute('allowFullScreen', '')
+							   //iframe.setAttribute("src", name);
+							   iframe.setAttribute("src", "/static/ViewerJS/index.html#../"+name);
+							   var div = document.createElement('div');
+							   div.className = "pdfContainer";
+							   div.style.height="100vh";
+							   div.style.width="100%";
+							   div.appendChild(iframe);
+							   var opc = document.getElementsByClassName('outerPdfContainer')[0];
+							   opc.style.display = "block";
+								 opc.style.zIndex = "9999";
+							   opc.appendChild(div);
+						}
+					{% endif %}
+			</script>
+			<style type="text/css">
+			.searchPaper{
+				width:75%;
+				height:auto;
+				font-size:20px;
+				padding: 10px 20px 10px 36px;
+				border: 2px solid #ddd;
+				background-color: #2f3238;
+				border-radius: 10px;
+				border-color: #ddd;
+				color: #fff;
+				outline: none;
+			}
+			.heading{
+				font-weight:bold;
+				border-bottom: 4px solid #de5e60;
+				display: inline-block;
+				color:#fff;
+				margin:50px;
+			}
+			.searchContainer{
+				text-align:center;
+			}
+			.searchInnerContainer{
+			display:inline-block;
+
+				text-align:center;
+				width:auto;
+				border:none;
+			}
+			.searchInnerContainer li{
+				font-weight:bold;
+			}
+			.filterList{
+				list-style-type:none;
+				width:60px;
+			}
+
+			.filterBarButton{
+				background-color:#1b1d20;;
+				color:#fff;
+
+			}
+			.black{
+				background: #de5e60; /* Old browsers */
+				background: -moz-linear-gradient(top, #de5e60 0%, #0e0e0e 100%); /* FF3.6+ */
+				background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#de5e60), color-stop(100%,#0e0e0e)); /* Chrome,Safari4+ */
+				background: -webkit-linear-gradient(top, #de5e60 0%,#0e0e0e 100%); /* Chrome10+,Safari5.1+ */
+				background: -o-linear-gradient(top, #de5e60 0%,#0e0e0e 100%); /* Opera 11.10+ */
+				background: -ms-linear-gradient(top, #de5e60 0%,#0e0e0e 100%); /* IE10+ */
+				background: linear-gradient(top, #de5e60 0%,#0e0e0e 100%); /* W3C */
+				filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#de5e60', endColorstr='#0e0e0e',GradientType=0 ); /* IE6-9 */
+			}
+			.searchResult{
+				background-color:#2f3238;
+			}
+			.papersContainer a{
+				text-decoration:none;
+				font-size:25px;
+				color: white;
+				font-weight:bold;
+			}
+			.papersContainer span{
+				color: #de5e60;
+			}
+			.paper:hover{
+				cursor:pointer;
+				color: #de5e60;
+				font-weight:bold;
+			}
+			.papersContainer li{
+				margin:20px;
+			}
+			.paper{
+				font-size:20px;
+				color: white;
+				display:block;
+				overflow:hidden;
+				width:100%;
+				border-bottom: 2px solid #de5e60;
+			}
+			.paper:hover span{
+				color:white;
+			}
+			.papersContainer li{
+				background-color:#2f3238
+			}
+			.yearButton{
+				background-color: Transparent;
+				border-color: Transparent;
+			}
+			.yearButton:hover{
+				background-color: #212529;
+				border-color: #de5e60;
+			}
+			input[type="radio"]:checked label{
+				background-color: #212529;
+				border-color: #de5e60;
+			}
+		</style>
+			<div class="col-md-12" style="color:#ffffff;">
+				<div class="col-md-12">
+				<!--PDF container-->
+					<div class="outerPdfContainer" style="height:100vh; width:100vw;display:none;position:fixed;top:0;bottom:0;left:0;right:0;z-index:999"></div>
+					<div class="col-md-12" style="color:#ffffff">
+						<h1>Question papers</h1>
+					</div>
+					<div id="searchResult" class="container-fluid searchResult col-md-12" style="display:block;">
+						<div class="container col-md-10 offset-md-1">
+							<ul class="papersContainer list-group" id='paperList'>
+								<!-- List of paper ,to be load dynamically-->
+								{% load get_at_index %}
+								{% if qpapers.papers.papers|length == 0 %}
+									<li class="text-center list-group-item" style="background-color:#1b1d20;">No papers found!</li>
+								{% endif %}
+								{% for paper in qpapers.papers.papers %}
+									<li class="list-group-item" style="background-color:#1b1d20;"><div class="paper"><a href="#"><div class="customPaperLink" id="paperIn" onclick="downloadPDF('{{qpapers.id.id|get_at_index:forloop.counter0}}')"><span class="far fa-file-pdf"></span>&nbsp;&nbsp; {{paper}} </div></a></div></li>
+								{% endfor %}
+							</ul>
+						<br>
+						</div>
+					</div>
+				</div>
+			</div>
+			<br><br>
+		</div>
+
+		{% include "contact.html" %}
+	</body>
+</html>

@@ -1,0 +1,117 @@
+<html>
+	<title>Welcome to MechMania!</title>
+	<head>
+		{% load staticfiles %}
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<link id="fontsCSS" rel="stylesheet" type="text/css" href="{% static 'fonts/fonts.css' %}" />
+		<link id="bsCSS" rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}" />
+		<link id="cusCSS" rel="stylesheet" type="text/css" href="{% static 'css/projects.css' %}" />
+		<link type="text/css" href="{% static 'css/jscrollpane.css' %}" rel="stylesheet" media="all" />
+
+		<script src="{% static 'js/jquery-3.2.1.min.js' %}" type="text/javascript"></script>
+		<script src="{% static 'js/bootstrap.bundle.min.js' %}" type="text/javascript"></script>
+		<script src="{% static 'js/fontawesome-all.min.js' %}" type="text/javascript"></script>
+		<script src="{% static 'js/mousewheel.js' %}" type="text/javascript"></script>
+		<script src="{% static 'js/jscrollpane.min.js' %}" type="text/javascript"></script>
+	</head>
+	<body class="custom-font" id="bootstrap-override-id">
+		{% include "menubar.html" %}
+
+		<!--Internships and visits block-->
+		<style>
+				#bootstrap-override-id .nav-item .active {
+					background-color:#2f3238;
+					color:#ffffff;
+				}
+		</style>
+		<div class="col-md-12" style="background-color:#232221">
+			<br><br><br><br><br>
+			<div class="col-md-12">
+				<div class="col-md-12">
+					<div class="col-md-12" style="color:#ffffff">
+						<h1>Industrial Projects</h1>
+					</div>
+
+					<!--Projects-->
+					{% if projects|length == 0 %}
+						<div class="col-md-12 text-center" style="color:#ffffff;"><h5>No projects found!</h5></div>
+						<br>
+					{% endif %}
+					{% for d in projects %}
+					<div class="col-md-12" style="color:#ffffff;">
+					  <div class="col-md-12">
+							<br>
+							<div class="col-md-12" style="box-shadow:0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12); padding-top:15px; padding-bottom:15px; background-color:#2f3238;">
+								<div class="col-md-12 row nomargin">
+									<div class="col-md-3 nopadding">
+										<a href="/industry/{{d.0.name}}/"><img width="100%" src="{% static d.0.logo %}" alt="{{d.0.name}}"></a>
+									</div>
+									<div class="col-md-9 text-left" style="color:#ffffff;">
+										<div class="col-md-12">
+											<div class="row nomargin" style="cursor:pointer;" onclick="location.href='/industry/Google/'"><h3>{{d.0.name}}&nbsp;</h3><h6><i class="fas fa-external-link-alt" style="color:#5bc0de"></i></h6></div>
+											<br>
+											<p>{{d.0.description}}</p>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-12">
+									<br>
+									<button style="color:#ffffff; cursor:pointer; background-color:#2f3238; border:none;" class="btn col-md-12" data-toggle="collapse" href="#collapseIndustry{{d.0.pk}}" aria-expanded="false" aria-controls="collapseIndustry{{d.0.pk}}">
+										<i class="fas fa-chevron-down"></i>
+									</button>
+									{% for project in d.1 %}
+									<div class="collapse" id="collapseIndustry{{d.0.pk}}">
+											<br>
+											<div class="card-columns">
+												<div class="card text-center" style="background-color:#232221;">
+												  <div class="card-header">
+												    <h5>{{ project.0.type }}</h5>
+														<div style="border-bottom:1px solid #de5e60;" class="col-md-4 offset-md-4"></div>
+												  </div>
+												  <div class="card-block" style="background-color:#282625;">
+														<br>
+														<div class="col-md-12">
+												    	<p class="card-text">{{ project.0.description }}</p>
+														</div>
+														<br>
+														<h6><i style="color:#de5e60" class="fas fa-list-ol"></i>&nbsp;&nbsp;{{ project.0.number }} Projects</h6>
+														<h6><i style="color:#de5e60" class="fas fa-users"></i>&nbsp;&nbsp;{{ project.0.minimumCnt }} students</h6>
+												  </div>
+												  <div class="card-footer">
+												  {% if project.1 == 'apply' and admin == 'no' and capply == 'no'%}
+												    <button class="btn btn-outline-success btn-sm" style="cursor:pointer;" onclick="location.href='/projects/apply/{{project.0.pk}}/'"><i class="fas fa-check-circle"></i>&nbsp;&nbsp;Click to apply</button>
+												  {% endif %}
+												  {% if project.1 == 'applied' and admin == 'no' and capply == 'no'%}
+												  <button class="btn btn-outline-warning btn-sm" style="cursor:pointer;" onclick="alert('You have already apllied for this project. Kindly wait for the confirmation from industry. Till then you can apply for other projects!');location.href='/projects/groupInfo/{{project.0.pk}}/'"><i class="fas fa-exclamation-circle"></i>&nbsp;&nbsp;Already applied</button>
+												  {% endif %}
+												  {% if project.1 == 'confirmed' and admin == 'no' and capply == 'no'%}
+												  <button class="btn btn-outline-info btn-sm"><i class="fas fa-thumbs-up"></i>&nbsp;&nbsp;Confirmed</button>
+												  {% endif %}
+												  {% if capply == 'yes' %}
+												  <button class="btn btn-outline-secondary btn-sm" style="cursor:pointer;" onclick="alert('Oops! Looks like you already have a confirmed project! You can get only one project at a time.')"><i class="fas fa-exclamation-circle"></i>&nbsp;&nbsp;Can not apply</button>
+												  {% endif %}
+												  {% if admin == 'yes' %}
+												    <button class="btn btn-outline-success btn-sm" style="cursor:pointer;" onclick="location.href='/projects/listOfApplicants/{{project.0.pk}}/'"><i class="fas fa-check-circle"></i>&nbsp;&nbsp;click to see aplicants</button>
+												  {% endif %}
+												  </div>
+												</div>
+											</div>
+									</div>
+									{% endfor %}
+								</div>
+							</div>
+							<br>
+						</div>
+						<br>
+					</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+
+		{% include "contact.html" %}
+	</body>
+</html>

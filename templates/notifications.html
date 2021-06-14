@@ -1,0 +1,158 @@
+<html>
+	<title>Welcome to MechMania!</title>
+	<head>
+		{% load staticfiles %}
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<link id="fontsCSS" rel="stylesheet" type="text/css" href="{% static 'fonts/fonts.css' %}" />
+		<link id="bsCSS" rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}" />
+		<link id="cusCSS" rel="stylesheet" type="text/css" href="{% static 'css/notifications.css' %}" />
+
+		<script src="{% static 'js/jquery-3.2.1.min.js' %}" type="text/javascript"></script>
+		<script src="{% static 'js/bootstrap.bundle.min.js' %}" type="text/javascript"></script>
+		<script src="{% static 'js/fontawesome-all.min.js' %}" type="text/javascript"></script>
+
+		<script src="{% static 'js/title_notifications.js' %}" type="text/javascript"></script>
+		<script type="text/javascript">
+			function reactReq(i, id){
+				var c;
+				if(i == 1){
+					c = "accept";
+				}
+				else if(i == 0){
+					c = "reject";
+				}
+				$.post("/internships/notificationResp/",
+					{
+						'pk':id,
+						'response': c,
+						'csrfmiddlewaretoken': '{{ csrf_token }}'
+					},
+					function(data){
+						document.location.reload();
+					}
+
+				);
+			}
+			function deleteNotice(type, id){
+				alert(id);
+				$.post("/shortNotifications/delete_notice/",
+					{
+						'reqId':id,
+						'type': type,
+						'csrfmiddlewaretoken': '{{ csrf_token }}'
+					},
+					function(data){
+						document.location.reload();
+					}
+
+				);
+			}
+		</script>
+	</head>
+	<body class="custom-font" id="bootstrap-override-id">
+		{% include "menubar.html" %}
+
+		<section class="container col-md-12" style="background-color:#232221;">
+			<!--<div class="row col-md-12 nomargin" style="padding-left:0;padding-right:0">
+
+				<div class="col-md-2 text-center" href="#">
+					<i class="fa fa-user-plus" style="vertical-align:5%;"aria-hidden="true"></i>
+				</div>-->
+
+			<div class="" href="#" >
+					<h6 class="col-md-12" >Do you want to accept request?<br><br><small style="color:#737373;">10 day ago</small></h6>
+				</div>
+
+
+			 	<div class="col-md-12" href="#">
+			 		<header class="page-title col-md-12">
+			 			<h1 style="color:#ffffff;"><br>Notifications<br></h1>
+			 		</header>
+					<div class="col-md-12">
+						<ul class="nopadding">
+
+
+											<div class="dropdown-divider" style="border-color:#808080;"></div>
+					{% for notice in notices %}
+
+						{% if notice.label == "gen_notice" %}
+										<div class="col-md-10 offset-md-1">
+												<div class="row col-md-12"style="color:#ffffff;">
+													<div class="col-md-1">
+														<br>
+														<h3><i class="fas fa-bell"></i></h3>
+												  </div>
+													<div class="col-md-6">
+														<br>
+														<h4>{{notice.data.header}}</h4>
+														<p>{{notice.data.message}}</p>
+												  </div>
+													<div class="col-md-5" >
+														<div class="col-md-12"style="background-color:#2f3238">
+															<br>
+															<p>Posted On : {{notice.timestamp}}</p>
+															<p>Posted By : rathirohit</p>
+															<button type="button"class="btn btn-outline-secondary btn-sm col-md-4"style="background-color:#2f3238" onclick="deleteNotice('gen_notice', {{notice.data.pk}})">Delete</button><br><br>
+
+														</div>
+														<!--<div <i class="far fa-trash-alt" style="padding-left:2pxfont-size:22px;margin-left:13px;"></i></div>-->
+													</div>
+												</div>
+											</div>
+						{% else %}
+										<div class="col-md-10 offset-md-1">
+												<div class="row col-md-12 "style="color:#ffffff;">
+													<div class="col-md-1">
+														<br>
+														<h3><i class="fa fa-user-plus" aria-hidden="true"></i></h3>
+												  </div>
+													<div class="col-md-6">
+														<br>
+														<h4>Industrial visit invite</h4>
+														<p>{{notice.data.user}} invited you for visiting {{notice.data.company}}. Want to accept ?</p>
+														<div class="row col-md-12" >
+																<button type="button"class="btn btn-outline-secondary btn-sm col-md-4"style="cursor:pointer; color:GREEN; background-color:#2f3238" onclick="reactReq(1,{{notice.data.pk}})">Accept</button>
+																<div class="col-md-1"><br></div>
+																<button type="button"class="btn btn-outline-secondary btn-sm col-md-4"style="cursor:pointer; color:RED; background-color:#2f3238" onclick="reactReq(0,{{notice.data.pk}})">Reject</button>
+												  	</div>
+														<br>
+												</div>
+													<div class="col-md-5" >
+														<div class="col-md-12"style="background-color:#2f3238">
+															<br>
+															<p>Posted On : {{notice.timestamp}}</p>
+															<p>Posted By : rathirohit</p>
+															<button type="button"class="btn btn-outline-secondary btn-sm col-md-4"style="cursor:pointer; background-color:#2f3238" onclick="deleteNotice('iv_request', {{notice.data.pk}})">Delete</button><br><br>
+														</div>
+													</div>
+												</div>
+											</div>
+						{% endif %}
+										<div class="dropdown-divider" style="border-color:#808080;"></div>
+					{% endfor %}
+							</ul>
+
+							<br>
+							<div class="col-md-12" id="notificationsPagination">
+								<div class="col-md-12 d-flex">
+									<ul class="pagination mx-auto" style="background-color:#232221;">
+										<li class="page-item"><a class="page-link" href="/notifications/page/1"aria-label="Previous" style="background-color:#232221;border-color:#a6a6a6;"> <span aria-hidden="true">«</span></a></li>
+										<li class="page-item active"><a class="page-link" href="/notifications/page/1"style="background-color:#232221;border-color:#a6a6a6;">1</a></li>
+										<li class="page-item"><a class="page-link" href="/notifications/page/3"style="background-color:#232221;border-color:#a6a6a6;">2</a></li>
+										<li class="page-item"><a class="page-link" href="#"style="background-color:#232221;border-color:#a6a6a6;">...</a></li>
+										<li class="page-item"><a class="page-link" href="/notifications/page/4"style="background-color:#232221;border-color:#a6a6a6;">4</a></li>
+										<li class="page-item"><a class="page-link" href="/notifications/page/5"style="background-color:#232221;border-color:#a6a6a6;">5</a></li>
+										<li class="page-item"><a class="page-link" href="/notifications/page/5"aria-label="Next"style="background-color:#232221;border-color:#a6a6a6;"> <span aria-hidden="true">»</span></a></li>
+									</ul><br>
+								</div>
+							</div>
+					</div>
+			 	</div>
+		</section>
+
+		{% include "contact.html" %}
+	</body>
+</html>

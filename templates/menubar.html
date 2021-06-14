@@ -1,0 +1,111 @@
+{% load staticfiles %}
+
+<!--Menubar-->
+<script type="text/javascript">
+  /*Smoothscroll*/
+  $(document).ready(function(){
+    $(".smoothScroll").click(function(event){
+      if($(this.hash).offset().top){}
+      event.preventDefault();
+      $('html,body').animate({scrollTop:$(this.hash).offset().top}, 1000);
+    });
+  });
+</script>
+<nav class="custom-navbar navbar navbar-inverse navbar-expand-md fixed-top">
+  <a class="navbar-brand" href="/">
+    <img class="col-md-12" src="{% static 'images/logo.png' %}" alt="MechMania">
+  </a>
+
+  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="custom-nav-button fas fa-bars"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarToggler">
+    <ul class="navbar-nav mr-auto mt-2 mt-md-0">
+      <li class="nav-item">
+        <a class="smoothScroll nav-link custom-nav-button" href="/#home">HOME</a>
+      </li>
+      <li class="nav-item">
+        <a class="smoothScroll nav-link custom-nav-button" href="/#industry">INDUSTRY</a>
+      </li>
+      <li class="nav-item">
+        <a class="smoothScroll nav-link custom-nav-button" href="/#academics">ACADEMICS</a>
+      </li>
+      <li class="nav-item">
+        <a class="smoothScroll nav-link custom-nav-button" href="/#about">ABOUT</a>
+      </li>
+      <li class="nav-item">
+        <a class="smoothScroll nav-link custom-nav-button" href="/#contact">CONTACT</a>
+      </li>
+    </ul>
+
+    <form class="form-inline my-2 my-lg-0 nomargin nopadding" action="/search">
+      <div class="input-group col-md-12">
+       <input name="query" type="text" class="menubar-custom-input form-control" placeholder="Search here..." required>
+       <div class="input-group-btn">
+         <button class="btn btn-default" type="submit" style="cursor:pointer;">
+           <i class="fas fa-search"></i>
+         </button>
+       </div>
+      </div>
+    </form>
+
+    {% if user.is_authenticated %}
+      <!-- notifications-->
+      <div id="notiDropdown" class="dropdown show">
+        <div id="dLabel" onclick= "fetchNotices()" role="button" style="padding:10px; color:#9d9d9d;" data-toggle="dropdown" data-target="self" href="#">
+          <i class="fas fa-bullhorn"></i>
+        </div>
+
+
+        <div class="dropdown-menu dropdown-menu-right custom-dropdown-menu" style="width:250px; right:0; left:auto;" aria-labelledby="dropdownMenuLink">
+          <h1 class="dropdown-header" style="font-size:1.05rem;">Notifications</h1>
+          <div class="dropdown-divider" style="border-color:#464a53;"></div>
+
+          <div class="col-md-12 scroll-pane" id="noticePanel" style="max-height:300px; overflow:auto; ">
+            <!-- notices loads dynamically -->
+          </div>
+
+        <div class="dropdown-divider" style="border-color:#464a53;"></div>
+           <div class="dropdown-footer">
+             <div class="col-md-12">
+               <a href="/notifications"><h6 class="menu-title text-center">View all
+                 <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+               </h6></a>
+             </div>
+           </div>
+
+        </div>
+      </div>
+      <!-- END OF notifications-->
+    {% endif %}
+
+    {% if user.is_authenticated %}
+      <div class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle custom-nav-button" style="padding:10px; cursor:pointer;" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {% if user.profile.profile_picture == null or user.profile.profile_picture == '' %}
+              <img class="rounded" height="46px" src="{% static 'images/default_profile_female.jpg' %}" alt="Profile Picture">
+            {% else %}
+              <img class="rounded" height="46px" src="{% static request.user.profile.profile_picture %}" alt="Profile Picture">
+            {% endif %}
+        </a>
+        <div style="right:0;left:auto;" class="custom-dropdown-menu dropdown-menu dropdown-menu-left" aria-labelledby="navbarDropdownMenuLink">
+          {% if request.user.profile.is_admin %}
+            <a class="custom-dropdown-item dropdown-item" href="{% url 'AdminAccess:index_admin' %}">Admin access</a>
+            <div class="dropdown-divider" style="border-color:#464a53"></div>
+          {% endif %}
+          <a class="custom-dropdown-item dropdown-item" href="/username/{{ request.user.username }}/">{{ request.user.username }}</a>
+          <a class="custom-dropdown-item dropdown-item" href="{% url 'Accounts:profile' %}">Profile</a>
+          <div class="dropdown-divider" style="border-color:#464a53"></div>
+          <a class="custom-dropdown-item dropdown-item" href="{% url 'Accounts:logout' %}">Logout</a>
+        </div>
+      </div>
+    {% else %}
+      <div class="navbar-nav navbar-right">
+        <li class="nav-item" style="padding-left:10px;">
+          <a class="nav-link custom-nav-button" style="padding-left:0; padding-right:0;" href="/loginsignup.html">Login/Signup <i class="fas fa-sign-in-alt"></i></a>
+        </li>
+      </div>
+    {% endif %}
+  </div>
+</nav>

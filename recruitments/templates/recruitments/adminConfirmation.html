@@ -1,0 +1,48 @@
+<html>
+	<head>
+		{% load staticfiles %}
+		<title>Admin page</title>
+		<script src="{% static 'js/jquery-3.2.1.min.js' %}" type="text/javascript"></script>
+		<script type="text/javascript">
+			function register(userId){
+				alert(userId);
+				alert("{{recruitment.industry.pk}}");
+
+				$.post("/recruitments/confirm",
+				{
+					"uid": userId,
+					"recId": {{recruitment.industry.pk}},
+					'csrfmiddlewaretoken': '{{ csrf_token }}'
+				},
+				function(data){
+					//alert(data);
+				});
+				location.reload();
+			}
+		</script>
+	</head>
+	<body class="custom-font" id="bootstrap-override-id">
+		<script>
+			alert('{{user.is_authenticated}}');
+			alert('{{user.profile.is_admin}}');
+		</script>
+		{% if user.is_authenticated and user.profile.is_admin%}
+			<h1>{{recruitment.industry.name}}</h1>
+			<h2>{{recruitment.type}}</h2>
+			<h2>{{recruitment.industry.address}}</h2>
+
+			{% if list|length >= 1 %}
+				{% for a in list %}
+					<div>
+						<h4 style="display: inline-block;">{{a.user.user.username}}</h4>
+						<button onclick="register('{{a.user.user.pk}}')">Confirm</button>
+					</div>
+				{% endfor %}
+			{% else %}
+				<h2>No applications</h2>
+			{% endif %}
+		{% else %}
+			<h1>Not permitted</h1>
+		{% endif %}
+	</body>
+<html>

@@ -1,0 +1,388 @@
+<html>
+	<title>Welcome to MechMania!</title>
+	<head>
+		{% load staticfiles %}
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<link id="fontsCSS" rel="stylesheet" type="text/css" href="{% static 'fonts/fonts.css' %}" />
+		<link id="bsCSS" rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}" />
+		<link id="cusCSS" rel="stylesheet" type="text/css" href="{% static 'css/industry.css' %}" />
+		<link type="text/css" href="{% static 'css/jscrollpane.css' %}" rel="stylesheet" media="all" />
+
+		<script src="{% static 'js/jquery-3.2.1.min.js' %}" type="text/javascript"></script>
+		<script src="{% static 'js/bootstrap.bundle.min.js' %}" type="text/javascript"></script>
+		<script src="{% static 'js/fontawesome-all.min.js' %}" type="text/javascript"></script>
+		<script src="{% static 'js/mousewheel.js' %}" type="text/javascript"></script>
+		<script src="{% static 'js/jscrollpane.min.js' %}" type="text/javascript"></script>
+
+		<script src="{% static 'js/title_notifications.js' %}" type="text/javascript"></script>
+	</head>
+	<body class="custom-font" id="bootstrap-override-id">
+		{% include "menubar.html" %}
+
+		<!--Industry block-->
+		<div class="col-md-12" style="background-color:#232221">
+			<br><br><br><br><br>
+			<div class="col-md-12">
+				<div class="col-md-12">
+					<div class="col-md-12" style="color:#ffffff">
+						<h1>{{data.name}}</h1>
+					</div>
+				</div>
+				<br>
+				<div class="col-md-12">
+					<div class="col-md-12 row nomargin">
+						<div class="col-md-3 offset-md-1 order-md-2">
+							<img width="100%" class="rounded" src="{% static data.logo %}" alt="industry">
+							<br><br>
+						</div>
+						<div class="col-md-8 order-md-1" style="color:#ffffff">
+							{{data.description}}
+						</div>
+					</div>
+				</div>
+
+				<br><br>
+				<div class="col-md-4 offset-md-4" style="border-bottom:2px solid #de5e60"></div>
+				<br><br>
+
+				<style>
+						#bootstrap-override-id .nav-item .active {
+							background-color:#2f3238;
+							color:#ffffff;
+						}
+				</style>
+				<ul style="border-bottom:2px solid #de5e60;" class="nav nav-tabs col-md-10 offset-md-1" role="tablist">
+				  <li class="nav-item col-md-3 text-center">
+				    <a style="border:2px solid #de5e60;" class="nav-link active custom-nav-link" data-toggle="tab" href="#internships" role="tab">Internships</a>
+				  </li>
+				  <li class="nav-item col-md-3 text-center" id="ivLi">
+				    <a style="border:2px solid #de5e60;" class="nav-link custom-nav-link" data-toggle="tab" href="#industrialvisits" role="tab">Industrial Visits</a>
+				  </li>
+				  <li class="nav-item col-md-3 text-center">
+				    <a style="border:2px solid #de5e60;" class="nav-link custom-nav-link" data-toggle="tab" href="#projects" role="tab">Projects</a>
+				  </li>
+				  <li class="nav-item col-md-3 text-center" id="recLi">
+				    <a style="border:2px solid #de5e60;" class="nav-link custom-nav-link" data-toggle="tab" href="#recruitments" role="tab">Recruitments</a>
+				  </li>
+				</ul>
+				<br><br>
+				<div class="tab-content col-md-10 offset-md-1" style="color:#ffffff">
+				<div class="tab-pane active text-center" id="internships" role="tabpanel">
+				<script>
+					ivloaded = 0;
+					projectsloaded = 0;
+					recruitmentsloaded = 0;
+
+					function applyFor(pk){
+						{% if user.is_authenticated %}
+							var method = 'GET';
+							var a = document.createElement("a");
+							a.setAttribute("href","http://127.0.0.1:8000/internships/applyInternship?industry="+pk);
+							document.body.appendChild(a);
+							a.click();
+						{% else %}
+							window.location = "/loginsignup.html";
+							//goDetailsPage(pk);
+						{% endif %}
+					}
+				</script>
+					{% for internship in data.internships %}
+						<div class="col-md-12 row nomargin" style="box-shadow:0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12); padding-top:15px; padding-bottom:15px; background-color:#2f3238;">
+							<div class="col-md-3 nopadding">
+								<a href="/industry/everLastWire/"><img width="100%" src="{% static data.logo %}" alt="Ever Last Wire Industries"></a>
+							</div>
+							<div class="col-md-6 text-left" style="color:#ffffff;">
+								<div class="col-md-12">
+									<div class="row nomargin" style="cursor:pointer;"><h3>{{data.name}}&nbsp;</h3></div>
+									<br>
+									<p>{{internship.description}}</p>
+								</div>
+							</div>
+							<div class="col-md-3 text-left">
+								<div class="col-md-12">
+
+									{% if internship.allowed > 0 %}
+										{% if internship.allowed == internship.pk %}
+											<!-- Confirmed -->
+											<h3 class="text-right"><button class="btn btn-outline-info btn-sm"><i class="fas fa-thumbs-up"></i>&nbsp;&nbsp;Confirmed</button></h3>
+										{% else %}
+											<!-- Cannot apply -->
+											<h3 class="text-right"><button class="btn btn-outline-secondary btn-sm" style="cursor:pointer;" onclick="alert(\'Oops! Looks like you already have a confirmed industrial visit! You can get only one industrial visit at a time.\')"><i class="fas fa-exclamation-circle"></i>&nbsp;&nbsp;Can not apply</button></h3>
+										{% endif %}
+									{% else %}
+										{% if internship.applied == 1 %}
+											<h3 class="text-right"><button class="btn btn-outline-warning btn-sm" style="cursor:pointer;" onclick="alert(\'You have already apllied for this industrial visit. Kindly wait for the confirmation from industry. Till then you can apply for other industrial visits!\')"><i class="fas fa-exclamation-circle"></i>&nbsp;&nbsp;Already applied</button></h3>
+										{% else %}
+											<h3 class="text-right"><button class="btn btn-outline-success btn-sm" style="cursor:pointer;" onclick="applyFor({{internship.pk}})"><i class="fas fa-check-circle"></i>&nbsp;&nbsp;Click to apply</button></h3>
+										{% endif %}
+
+									{% endif %}
+									<br>
+									<p><i style="color:#de5e60" class="far fa-calendar-alt"></i>&nbsp;&nbsp;{{internship.startdate}} to {{internship.enddate}}</p>
+									<p><i style="color:#de5e60" class="fas fa-cogs"></i>&nbsp;&nbsp;{{internship.type}}</p>
+									<p><i style="color:#de5e60" class="fas fa-rupee-sign"></i>&nbsp;&nbsp;{{internship.stipend}}/month</p>
+								</div>
+							</div>
+						</div>
+						<br>
+					{% endfor %}
+				</div>
+				<script>
+					$("#ivLi").click(function(){
+						if(ivloaded == 1)
+							return;
+						$.post("/internships/getIvs",
+						{
+							"industry" : "{{data.name}}",
+							"csrfmiddlewaretoken" : "{{csrf_token}}",
+						},
+						function(data){
+							JSON.stringify(data);
+							ivloaded = 1;
+							writeIV(data.message);
+						});
+					});
+					function writeIV(ivdata){
+						var ans = "";
+						var ivd = ivdata.data;
+
+						for(var i=0; i<ivd.length; ++i){
+							ans +=
+								'<div class="col-md-12 row nomargin" style="box-shadow:0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12); padding-top:15px; padding-bottom:15px; background-color:#2f3238;">'
+								+'<div class="col-md-3 nopadding">'
+								+'<a href="/industry/everLastWire/"><img width="100%" src="{% static data.logo %}" alt="Ever Last Wire Industries"></a>'
+								+'</div><div class="col-md-6 text-left" style="color:#ffffff;">'
+								+'<div class="col-md-12">'
+								+'<div class="row nomargin" style="cursor:pointer;"><h3>{{data.name}}&nbsp;</h3></div>'
+								+'<br><p>'+ivd[i].description+'</p>'
+								+'</div></div><div class="col-md-3 text-left"><div class="col-md-12">';
+
+							if(ivdata.confid != 0){
+								if(ivdata.confid == ivd[i].pk)
+									ans += '<h3 class="text-right"><button class="btn btn-outline-info btn-sm"><i class="fas fa-thumbs-up"></i>&nbsp;&nbsp;Confirmed</button></h3>';
+								else
+									ans += '<h3 class="text-right"><button class="btn btn-outline-secondary btn-sm" style="cursor:pointer;" onclick="alert(\'Oops! Looks like you already have a confirmed industrial visit! You can get only one industrial visit at a time.\')"><i class="fas fa-exclamation-circle"></i>&nbsp;&nbsp;Can not apply</button></h3>';
+							}
+							else if(ivdata.appliedid != 0){
+								if(ivdata.appliedid == ivd[i].pk){
+									ans += '<h3 class="text-right"><button class="btn btn-outline-warning btn-sm" style="cursor:pointer;" onclick="alert(\'You have already apllied for this industrial visit. Kindly wait for the confirmation from industry. Till then you can apply for other industrial visits!\')"><i class="fas fa-exclamation-circle"></i>&nbsp;&nbsp;Already applied</button></h3>';
+								}
+								else{
+									ans += '<h3 class="text-right"><button class="btn btn-outline-secondary btn-sm" style="cursor:pointer;" onclick="alert(\'Oops! Looks like you have applied for a industrial visit! You can get only one industrial visit at a time.\')"><i class="fas fa-exclamation-circle"></i>&nbsp;&nbsp;Can not apply</button></h3>';
+								}
+							}
+							else{
+								ans += '<h3 class="text-right"><button class="btn btn-outline-success btn-sm" style="cursor:pointer;" onclick="location.href=\'/internships/applyIV/'+ivd[i].pk+'\'"><i class="fas fa-check-circle"></i>&nbsp;&nbsp;Click to apply</button></h3>'
+							}
+							ans += '<br>'
+							+'<p><i style="color:#de5e60" class="far fa-calendar-alt"></i>&nbsp;&nbsp;'+ivd[i].duration+' days</p>'
+							+'<p><i style="color:#de5e60" class="fas fa-cogs"></i>&nbsp;&nbsp;'+ivd[i].type+'</p>'
+							+'<p><i style="color:#de5e60" class="fas fa-users"></i>&nbsp;&nbsp;'+ivd[i].mincnt+' students</p>'
+							+'</div></div></div><br>';
+						}
+						document.getElementById("industrialvisits").innerHTML = ans;
+					}
+				</script>
+				<div class="tab-pane text-center" id="industrialvisits" role="tabpanel">
+					<!-- Loads dynamically -->
+				</div>
+
+				  <div class="tab-pane text-center" id="projects" role="tabpanel">
+						<script>alert("{{data.project.data}}");</script>
+						{% for project in data.projects.data %}
+						<br>
+						<script>alert("{{project}}");</script>
+						<div class="card-columns">
+							<div class="card text-center" style="background-color:#232221;">
+								<div class="card-header">
+									<h5>{{ project.0.type }}</h5>
+									<div style="border-bottom:1px solid #de5e60;" class="col-md-4 offset-md-4"></div>
+								</div>
+								<div class="card-block" style="background-color:#282625;">
+									<br>
+									<div class="col-md-12">
+										<p class="card-text">{{ project.0.description }}</p>
+									</div>
+									<br>
+									<h6><i style="color:#de5e60" class="fas fa-list-ol"></i>&nbsp;&nbsp;{{ project.0.number }} Projects</h6>
+									<h6><i style="color:#de5e60" class="fas fa-users"></i>&nbsp;&nbsp;{{ project.0.minimumCnt }} students</h6>
+								</div>
+								<div class="card-footer">
+									{% if project.1 == 'apply' and data.projects.admin == 'no' and data.projects.capply == 'no'%}
+									<button class="btn btn-outline-success btn-sm" style="cursor:pointer;" onclick="location.href='/projects/apply/{{project.0.pk}}'"><i class="fas fa-check-circle"></i>&nbsp;&nbsp;Click to apply</button>
+									{% endif %}
+									{% if project.1 == 'applied' and data.projects.admin == 'no' and data.projects.capply == 'no'%}
+									<button class="btn btn-outline-warning btn-sm" style="cursor:pointer;" onclick="alert('You have already apllied for this project. Kindly wait for the confirmation from industry. Till then you can apply for other projects!');location.href='/projects/groupInfo/{{project.0.pk}}/'"><i class="fas fa-exclamation-circle"></i>&nbsp;&nbsp;Already applied</button>
+									{% endif %}
+									{% if project.1 == 'confirmed' and data.projects.admin == 'no' and data.projects.capply == 'no'%}
+									<button class="btn btn-outline-info btn-sm"><i class="fas fa-thumbs-up"></i>&nbsp;&nbsp;Confirmed</button>
+									{% endif %}
+									{% if data.projects.capply == 'yes' %}
+									<button class="btn btn-outline-secondary btn-sm" style="cursor:pointer;" onclick="alert('Oops! Looks like you already have a confirmed project! You can get only one project at a time.')"><i class="fas fa-exclamation-circle"></i>&nbsp;&nbsp;Can not apply</button>
+									{% endif %}
+									{% if data.projects.admin == 'yes' %}
+									<button class="btn btn-outline-success btn-sm" style="cursor:pointer;" onclick="location.href='/projects/listOfApplicants/{{project.0.pk}}/'"><i class="fas fa-check-circle"></i>&nbsp;&nbsp;click to see aplicants</button>
+									{% endif %}
+								</div>
+							</div>
+						</div>
+						{% endfor %}
+					</div>
+
+					<!-- recruitments -->
+					<script>
+						$("#recLi").click(function(){
+							if(recruitmentsloaded == 1)
+								return;
+							$.post("/recruitments/getrec",
+							{
+								"industry" : "{{data.name}}",
+								"csrfmiddlewaretoken" : "{{csrf_token}}",
+							},
+							function(data){
+								JSON.stringify(data);
+								recruitmentsloaded = 1;
+								writeRecruitment(data);
+							});
+						});
+						function writeRecruitment(data){
+							var ans = "";
+							var applicable = data.applicable;
+							var rec = data.result;
+
+							for(var j=0; j<rec.length; j++){
+								ans +=	'<br>'
+									+'<div class="card-columns">'
+									+'<div class="card text-center" style="background-color:#232221;">'
+									+'<div class="card-header"><h5>'+rec[j].type+'</h5>'
+									+'<div style="border-bottom:1px solid #de5e60;" class="col-md-4 offset-md-4"></div>'
+									+'</div><div class="card-block" style="background-color:#282625;">'
+									+'<br><div class="col-md-12">'
+									+'<p class="card-text">'+rec[j].description+'</p>'
+									+'</div><br><ul class="text-left">'
+									+'<i style="color:#de5e60" class="fas fa-graduation-cap"></i>&nbsp;&nbsp;Qualifications:'
+									+'<div class="col-md-8 offset-md-2">'+rec[j].qualifications+'</div>'
+									+'</ul></div><div class="card-footer">';
+									if(applicable == 0){
+										if(rec[j].confirmed == 1){
+											<!-- Confirmed -->
+											ans += '<button class="btn btn-outline-info btn-sm"><i class="fas fa-thumbs-up"></i>&nbsp;&nbsp;Confirmed</button></h3>';
+										}
+										else{
+											<!-- cannot apply -->
+											ans += '<button class="btn btn-outline-secondary btn-sm" style="cursor:pointer;" onclick="alert(\'Oops! Looks like you already have a confirmed recruitment! You can get only one post at a time.\')"><i class="fas fa-exclamation-circle"></i>&nbsp;&nbsp;Can not apply</button>';
+										}
+									}
+									else{
+										if(rec[j].applied == 1)
+										{
+											<!-- Already applied -->
+											ans += '<button class="btn btn-outline-warning btn-sm" style="cursor:pointer;" onclick="alert(\'You have already apllied for this recruitment. Kindly wait for the confirmation from industry. Till then you can apply for other posts!\')"><i class="fas fa-exclamation-circle"></i>&nbsp;&nbsp;Already applied</button>';
+										}
+										else{
+											<!-- Apply -->
+											ans += '<button class="btn btn-outline-success btn-sm" style="cursor:pointer;" onclick="applyRecruitment('+rec[j].pk+')"><i class="fas fa-check-circle"></i>&nbsp;&nbsp;Click to apply</button>';
+										}
+									}
+
+									ans += '</div></div></div>';
+							}
+							document.getElementById("recruitments").innerHTML = ans;
+						}
+						function goDetailsPage(recId){
+							var method = 'GET';
+							var a = document.createElement("a");
+							a.setAttribute("href","http://127.0.0.1:8000/recruitments/apply?recId="+recId);
+							document.body.appendChild(a);
+							//alert(a.href);
+							a.click();
+						}
+
+						function applyRecruitment(pk){
+							{% if user.is_authenticated %}
+								//alert("authenticated already");
+								goDetailsPage(pk);
+							{% else %}
+								window.location = "/loginsignup.html";
+								//goDetailsPage(pk);
+							{% endif %}
+						}
+					</script>
+				  <div class="tab-pane text-center" id="recruitments" role="tabpanel">
+						<!-- loads dynamically -->
+					</div>
+				</div>
+
+				<br><br>
+				<div class="col-md-4 offset-md-4" style="border-bottom:2px solid #a6a6a6"></div>
+
+				<div class="col-md-10 offset-md-1">
+					<div class="col-md-12 row nomargin">
+						<div class="col-md-3">
+							<br><br>
+							<div class="col-md-12 text-center" style="color:#de5e60;">
+								<h3><i class="fas fa-map-marker"></i></h3>
+							</div>
+							<div style="height:10px;"></div>
+							<div class="col-md-12">
+								<div class="card col-md-12" style="color:#ffffff; background-color:#2f3238">
+								  <div class="card-block text-center" style="padding-top:20px; padding-bottom:20px;">
+								    Plot No E-3/2, Kupwad MIDC Sangli-416416
+								  </div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<br><br>
+							<div class="col-md-12 text-center" style="color:#de5e60;">
+								<h3><i class="fas fa-phone"></i></h3>
+							</div>
+							<div style="height:10px;"></div>
+							<div class="col-md-12">
+								<div class="card col-md-12" style="color:#ffffff; background-color:#2f3238">
+								  <div class="card-block text-center" style="padding-top:20px; padding-bottom:20px;">
+								    9823284171
+								  </div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<br><br>
+							<div class="col-md-12 text-center" style="color:#de5e60;">
+								<h3><i class="fas fa-at"></i></h3>
+							</div>
+							<div style="height:10px;"></div>
+							<div class="col-md-12">
+								<div class="card col-md-12" style="color:#ffffff; background-color:#2f3238">
+								  <div class="card-block text-center" style="padding-top:20px; padding-bottom:20px;">
+								    ewi_smk@radiffmail.com
+								  </div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<br><br>
+							<div class="col-md-12 text-center" style="color:#de5e60;">
+								<h3><i class="fas fa-globe"></i></h3>
+							</div>
+							<div style="height:10px;"></div>
+							<div class="col-md-12">
+								<div class="card col-md-12" style="color:#ffffff; background-color:#2f3238">
+								  <div class="card-block text-center" style="padding-top:20px; padding-bottom:20px;">
+								    -
+								  </div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<br><br>
+			</div>
+		</div>
+
+		{% include "contact.html" %}
+	</body>
+</html>

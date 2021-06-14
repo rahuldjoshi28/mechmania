@@ -1,0 +1,120 @@
+/*General*/
+.custom-font{
+	font-family:'TitilliumText25L';
+}
+
+.nopadding {
+	padding: 0;
+}
+
+.nomargin {
+	margin: 0;
+}
+
+/*Contact block*/
+.contact-block-custom-input{
+	font-size:1.125rem;
+	line-height:50px;
+	color:#cdcdcd;
+	background-color:#1b1d20;
+	border:none;
+}
+.contact-block-custom-input:focus{
+	font-size:1.125rem;
+	line-height:50px;
+	color:#cdcdcd;
+	background-color:#1b1d20;
+	border:none;
+}
+
+.contact-block-custom-textarea{
+	font-size:1.125rem;
+	color:#cdcdcd;
+	background-color:#1b1d20;
+	border:none;
+}
+.contact-block-custom-textarea:focus{
+	font-size:1.125rem;
+	color:#cdcdcd;
+	background-color:#1b1d20;
+	border:none;
+}
+
+.contact-block-custom-button{
+	font-size:1.5rem;
+	line-height:50px;
+	background-color:#1b1d20;
+	color:#bb5557;
+	border:none;
+	transition:1s;
+}
+.contact-block-custom-button:hover{
+	font-size:1.5rem;
+	line-height:50px;
+	background-color:#bb5557;
+	color:#1b1d20;
+	border:none;
+	cursor:pointer;
+}
+
+/*About details block*/
+.custom-about-card {
+	background-color:#cccccc;
+	opacity: 0.7;
+	border: none;
+}
+.custom-about-card:hover {
+	opacity: 1;
+}
+
+/*MenuBar*/
+.navbar-nav > li{
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+#bootstrap-override-id .custom-navbar {
+	background-color: #2f3238;
+	box-shadow: 0px 0px 35px #888888;
+}
+
+#bootstrap-override-id .custom-nav-button {
+	color: #9d9d9d;
+	font-size: 1.25rem;
+	-moz-transition: 1s;
+	-webkit-transition: 1s;
+	-o-transition: 1s;
+}
+#bootstrap-override-id .custom-nav-button:hover {
+	color: #de5e60;
+}
+
+.dropdown-toggle::after {
+    display:none
+}
+
+#bootstrap-override-id .custom-dropdown-menu {
+	background-color: #2f3238;
+	color: #9d9d9d;
+}
+
+#bootstrap-override-id .custom-dropdown-item {
+	color: #9d9d9d;
+}
+#bootstrap-override-id .custom-dropdown-item:hover {
+	background-color: #232221;
+	color: #FFFFFF;
+}
+
+.menubar-custom-input {
+	font-size:1.25rem;
+	color:#cdcdcd;
+	background-color:#1b1d20;
+	border:none;
+}
+.menubar-custom-input:focus {
+	font-size:1.25rem;
+	color:#cdcdcd;
+	background-color:#1b1d20;
+	border:none;
+}

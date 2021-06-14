@@ -1,0 +1,105 @@
+/*General*/
+.custom-font{
+	font-family:'TitilliumText25L';
+}
+
+.nopadding {
+	padding: 0;
+}
+
+.nomargin {
+	margin: 0;
+}
+
+/*Profile block*/
+.custom-profile-cover {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: #000000;
+	opacity: 0;
+	color: #FFFFFF;
+	cursor: pointer;
+}
+.custom-profile-cover:hover {
+	opacity: 0.5;
+}
+
+#bootstrap-override-id .custom-icon-delete {
+	cursor: pointer;
+	color: #FFFFFF;
+}
+#bootstrap-override-id .custom-icon-delete:hover {
+	color: #ff3300;
+}
+
+#bootstrap-override-id .custom-icon-edit {
+	cursor: pointer;
+	color: #FFFFFF;
+}
+#bootstrap-override-id .custom-icon-edit:hover {
+	color: #ffcc00;
+}
+
+.custom-blockquote {
+	background: #cdcccb;
+	border-right: 10px solid #787776;
+	text-align: right;
+}
+
+/*Contact block*/
+
+
+/*MenuBar*/
+.navbar-nav > li{
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+#bootstrap-override-id .custom-navbar {
+	background-color: #2f3238;
+	box-shadow: 0px 0px 35px #888888;
+}
+
+#bootstrap-override-id .custom-nav-button {
+	color: #9d9d9d;
+	font-size: 1.25rem;
+	-moz-transition: 1s;
+	-webkit-transition: 1s;
+	-o-transition: 1s;
+}
+#bootstrap-override-id .custom-nav-button:hover {
+	color: #de5e60;
+}
+
+.dropdown-toggle::after {
+    display:none
+}
+
+#bootstrap-override-id .custom-dropdown-menu {
+	background-color: #2f3238;
+	color: #9d9d9d;
+}
+
+#bootstrap-override-id .custom-dropdown-item {
+	color: #9d9d9d;
+}
+#bootstrap-override-id .custom-dropdown-item:hover {
+	background-color: #232221;
+	color: #FFFFFF;
+}
+
+.menubar-custom-input {
+	font-size:1.25rem;
+	color:#cdcdcd;
+	background-color:#1b1d20;
+	border:none;
+}
+.menubar-custom-input:focus {
+	font-size:1.25rem;
+	color:#cdcdcd;
+	background-color:#1b1d20;
+	border:none;
+}

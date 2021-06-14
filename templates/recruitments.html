@@ -1,0 +1,165 @@
+<html>
+	<title>Welcome to MechMania!</title>
+	<head>
+		{% load staticfiles %}
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<link id="fontsCSS" rel="stylesheet" type="text/css" href="{% static 'fonts/fonts.css' %}" />
+		<link id="bsCSS" rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}" />
+		<link id="cusCSS" rel="stylesheet" type="text/css" href="{% static 'css/recruitments.css' %}" />
+		<link type="text/css" href="{% static 'css/jscrollpane.css' %}" rel="stylesheet" media="all" />
+
+		<script src="{% static 'js/jquery-3.2.1.min.js' %}" type="text/javascript"></script>
+		<script src="{% static 'js/bootstrap.bundle.min.js' %}" type="text/javascript"></script>
+		<script src="{% static 'js/fontawesome-all.min.js' %}" type="text/javascript"></script>
+		<script src="{% static 'js/mousewheel.js' %}" type="text/javascript"></script>
+		<script src="{% static 'js/jscrollpane.min.js' %}" type="text/javascript"></script>
+
+		<script src="{% static 'js/title_notifications.js' %}" type="text/javascript"></script>
+		<script src = "{% static 'js/imageErrorHandle.js' %}" type="text/javascript"></script>
+	</head>
+	<body class="custom-font" id="bootstrap-override-id">
+		{% include "menubar.html" %}
+
+		<!--Internships and visits block-->
+		<style>
+				#bootstrap-override-id .nav-item .active {
+					background-color:#2f3238;
+					color:#ffffff;
+				}
+		</style>
+		<div class="col-md-12" style="background-color:#232221">
+			<br><br><br><br><br>
+			<div class="col-md-12">
+				<div class="col-md-12">
+					<div class="col-md-12" style="color:#ffffff">
+						<h1>Industrial Recruitments</h1>
+					</div>
+					<br>
+
+					<script>
+
+						window.onload = function getData(query){
+							$.post('/recruitments/search',{
+								"query": "#",
+								'csrfmiddlewaretoken': '{{ csrf_token }}'
+							},
+							function(data){
+								JSON.stringify(data);
+
+								writeRecruitments(data);
+							});
+						}
+
+						function goDetailsPage(recId){
+							var method = 'GET';
+							var a = document.createElement("a");
+							a.setAttribute("href","http://127.0.0.1:8000/recruitments/apply?recId="+recId);
+							document.body.appendChild(a);
+							//alert(a.href);
+							a.click();
+						}
+
+						function applyRecruitment(pk){
+							{% if user.is_authenticated %}
+								//alert("authenticated already");
+								goDetailsPage(pk);
+							{% else %}
+								window.location = "/loginsignup.html";
+								//goDetailsPage(pk);
+							{% endif %}
+						}
+
+						function seeApplications(recId){
+							{% if user.is_authenticated and user.profile.is_admin %}
+								window.location = "adminConfirm?recId="+recId;
+							{% else %}
+								window.location = "https://127.0.0.1:8080/recruitments/";
+							{% endif %}
+						}
+
+						function writeRecruitments(data){
+							var ans = "";
+							var applicable = data.result.applicable;
+							data = data.result.data;
+							for(var i=0; i<data.length; i++){
+							IMAGE_STATIC_URL = data[i].logo;
+								ans +=
+									'<br><div class="col-md-12" style="box-shadow:0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12); padding-top:15px; padding-bottom:15px; background-color:#2f3238;">'
+									+'<div class="col-md-12 row nomargin"><div class="col-md-3 nopadding">'
+									+'<a href="/industry/'+data[i].indname+'"><img width="100%" src="/static'+IMAGE_STATIC_URL+'" alt="'+data[i].indname+'"></a>'
+									+'</div><div class="col-md-6 text-left" style="color:#ffffff;">'
+									+'<div class="col-md-12">'
+									+'<div class="row nomargin" style="cursor:pointer;" onclick="location.href=\'/industry/'+data[i].indname+'\'"><h3>'+data[i].indname+'&nbsp;</h3><h6><i class="fas fa-external-link-alt" style="color:#5bc0de"></i></h6></div>'
+									+'<br><p>'+data[i].description+'</p>'
+									+'</div></div><div class="col-md-3 text-left">'
+									+'<div class="col-md-12"><br><br><br>'
+									+'<p><i style="color:#de5e60" class="fas fa-list-ol"></i>&nbsp;&nbsp;'+data[i].recruitments.length+' Recruitments</p>'
+									+'<p><i style="color:#de5e60" class="fas fa-map-marker"></i>&nbsp;&nbsp;location: '+data[i].address+'</p>'
+									+'</div></div></div><div class="col-md-12"><br>'
+									+'<button style="color:#ffffff; cursor:pointer; background-color:#2f3238; border:none;" class="btn col-md-12" data-toggle="collapse" href="#collapseIndustry'+data[i].pk+'" aria-expanded="false" aria-controls="collapseIndustry'+data[i].pk+'">'
+									+'<i class="fas fa-chevron-down"></i>'
+									+'</button>'
+									+'<div class="collapse" id="collapseIndustry'+data[i].pk+'">';
+									var rec = data[i].recruitments;
+									for(var j=0; j<rec.length; j++){
+										ans +=	'<br>'
+											+'<div class="card-columns">'
+											+'<div class="card text-center" style="background-color:#232221;">'
+											+'<div class="card-header"><h5>'+rec[j].type+'</h5>'
+											+'<div style="border-bottom:1px solid #de5e60;" class="col-md-4 offset-md-4"></div>'
+											+'</div><div class="card-block" style="background-color:#282625;">'
+											+'<br><div class="col-md-12">'
+											+'<p class="card-text">'+rec[j].description+'</p>'
+											+'</div><br><ul class="text-left">'
+											+'<i style="color:#de5e60" class="fas fa-graduation-cap"></i>&nbsp;&nbsp;Qualifications:'
+											+'<div class="col-md-8 offset-md-2">'+rec[j].qualifications+'</div>'
+											+'</ul></div><div class="card-footer">';
+											if(applicable == 0){
+												if(rec[j].confirmed == 1){
+													<!-- Confirmed -->
+													ans += '<button class="btn btn-outline-info btn-sm"><i class="fas fa-thumbs-up"></i>&nbsp;&nbsp;Confirmed</button></h3>';
+												}
+												else{
+													<!-- cannot apply -->
+													ans += '<button class="btn btn-outline-secondary btn-sm" style="cursor:pointer;" onclick="alert(\'Oops! Looks like you already have a confirmed recruitment! You can get only one post at a time.\')"><i class="fas fa-exclamation-circle"></i>&nbsp;&nbsp;Can not apply</button>';
+												}
+											}
+											else{
+												if(rec[j].applied == 1)
+												{
+													<!-- Already applied -->
+													ans += '<button class="btn btn-outline-warning btn-sm" style="cursor:pointer;" onclick="alert(\'You have already apllied for this recruitment. Kindly wait for the confirmation from industry. Till then you can apply for other posts!\')"><i class="fas fa-exclamation-circle"></i>&nbsp;&nbsp;Already applied</button>';
+												}
+												else{
+													<!-- Apply -->
+													ans += '<button class="btn btn-outline-success btn-sm" style="cursor:pointer;" onclick="applyRecruitment('+rec[j].pk+')"><i class="fas fa-check-circle"></i>&nbsp;&nbsp;Click to apply</button>';
+												}
+											}
+
+											ans += '</div></div></div>';
+									}
+
+									ans += '</div></div></div>';
+							}
+							ans+= "<br><br>";
+							document.getElementById("recruitmentInnerContainer").innerHTML = ans;
+							imageErrorHandle();
+						}
+					</script>
+
+					<!--Recruitments-->
+					<div class="col-md-12" style="color:#ffffff;">
+					  <div class="col-md-12" id="recruitmentInnerContainer">
+							<!-- loads dynamically -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		{% include "contact.html" %}
+	</body>
+</html>

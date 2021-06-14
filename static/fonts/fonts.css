@@ -1,0 +1,27 @@
+@font-face {
+font-family: "Icons";
+src: url("Icons.eot") format("eot"); /* IE9 Compat Modes */
+src: url("Icons.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+     url("Icons.woff") format("woff"), /* Modern Browsers */
+     url("Icons.ttf") format("truetype"); /* Safari, Android, iOS */
+font-weight: normal;
+font-style: normal;
+}
+@font-face {
+font-family: "Montserrat";
+src: url("Montserrat.eot") format("eot"); /* IE9 Compat Modes */
+src: url("Montserrat.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+     url("Montserrat.woff") format("woff"), /* Modern Browsers */
+     url("Montserrat.ttf") format("truetype"); /* Safari, Android, iOS */
+font-weight: normal;
+font-style: normal;
+}
+@font-face {
+font-family: "TitilliumText25L";
+src: url("TitilliumText25L.eot") format("eot"); /* IE9 Compat Modes */
+src: url("TitilliumText25L.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+     url("TitilliumText25L.woff") format("woff"), /* Modern Browsers */
+     url("TitilliumText25L.ttf") format("truetype"); /* Safari, Android, iOS */
+font-weight: normal;
+font-style: normal;
+}

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+	<title>Welcome to MechMania!</title>
+	<head>
+		{% load staticfiles %}
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<link id="fontsCSS" rel="stylesheet" type="text/css" href="{% static 'fonts/fonts.css' %}" />
+		<link id="bsCSS" rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}" />
+		<link id="cusCSS" rel="stylesheet" type="text/css" href="{% static 'css/internshipsandvisits.css' %}" />
+		<link type="text/css" href="{% static 'css/jscrollpane.css' %}" rel="stylesheet" media="all" />
+
+		<script src="{% static 'js/jquery-3.2.1.min.js' %}" type="text/javascript"></script>
+		<script src="{% static 'js/bootstrap.bundle.min.js' %}" type="text/javascript"></script>
+		<script src="{% static 'js/fontawesome-all.min.js' %}" type="text/javascript"></script>
+		<script src="{% static 'js/mousewheel.js' %}" type="text/javascript"></script>
+		<script src="{% static 'js/jscrollpane.min.js' %}" type="text/javascript"></script>
+
+		<script src = "{% static 'js/title_notifications.js' %}" type="text/javascript"></script>
+	</head>
+	<body class="custom-font" id="bootstrap-override-id" onload="searchInternships(1, 'no', 'no');">
+		{% include "menubar.html" %}
+
+		<!--Internships and visits block-->
+		<style>
+				#bootstrap-override-id .nav-item .active {
+					background-color:#2f3238;
+					color:#ffffff;
+				}
+		</style>
+		<script>
+			intpageno = 1;
+			inttotpage = 1;
+			function searchInternships(pageno,loc,type)
+			{
+
+				//document.getElementsByClassName("searchResult")[0].style.display="block";
+				$.post('/internships/internshipData/',{
+					'pageno':pageno,
+					'location':loc,
+					'type':type,
+					'csrfmiddlewaretoken': '{{ csrf_token }}'},
+					function(data){
+						JSON.stringify(data);
+						writeInternships(data)
+					}
+				);
+
+			}
+
+			function applyFor(pk){
+				{% if user.is_authenticated %}
+					var method = 'GET';
+					var a = document.createElement("a");
+					a.setAttribute("href","http://127.0.0.1:8000/internships/applyInternship?industry="+pk);
+					document.body.appendChild(a);
+					a.click();
+				{% else %}
+					window.location = "/loginsignup.html";
+					//goDetailsPage(pk);
+				{% endif %}
+			}
+
+			function companyRedirect(company){
+				location.href='/industry/'+company+'/';
+			}
+
+			function prevIntPage(){
+				if(window.intpageno > 1){
+					window.intpageno -= 1;
+					searchInternships(window.intpageno, "no", "no");
+				}
+			}
+			function nextIntPage(){
+				if(intpageno<inttotpage){
+					window.intpageno += 1;
+					searchInternships(window.intpageno, "no", "no");
+				}
+			}
+
+			function writeInternships(data){
+				var ans = "";
+				var pagination = inttotpage = data.total;
+				data = data.data;
+
+				for(var i=0; i<data.length; i++){
+					//alert(data[i]);
+					IMAGE_STATIC_URL = data[i].logo;
+
+					ans += '<br>'
+					+'<div class="col-md-12 row nomargin" style="box-shadow:0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12); padding-top:15px; padding-bottom:15px; background-color:#2f3238;">'
+					+'<div class="col-md-3 nopadding">'
+					+'<a href="/industry/'+data[i].company+'/"><img width="100%" src="/static'+IMAGE_STATIC_URL+'"></a>'
+					+'</div><div class="col-md-6 text-left" style="color:#ffffff;">'
+					+'<div class="col-md-12">'
+					+'<div class="row nomargin" style="cursor:pointer;"><h3 onclick="companyRedirect(\''+data[i].company+'\')">'+data[i].company+'&nbsp;</h3><h6 onclick="companyRedirect(\''+data[i].company+'\')"><i class="fas fa-external-link-alt" style="color:#5bc0de"></i></h6></div>'
+					+'<br>'
+					+'<p>'+data[i].type+'</p>'
+					+'</div></div><div class="col-md-3 text-left"><div class="col-md-12">';
+
+					if(data[i].allowed != 0){
+						if(data[i].allowed == data[i].pk){
+							<!-- confirmed -->
+							ans += '<h3 class="text-right"><button class="btn btn-outline-info btn-sm"><i class="fas fa-thumbs-up"></i>&nbsp;&nbsp;Confirmed</button></h3>';
+						}
+						else{
+							<!-- Cannot apply -->
+							ans += '<h3 class="text-right"><button class="btn btn-outline-secondary btn-sm" style="cursor:pointer;" onclick="alert(\'Oops! Looks like you already have a confirmed internship! You can get only one internship at a time.\')"><i class="fas fa-exclamation-circle"></i>&nbsp;&nbsp;Can not apply</button></h3>';
+						}
+					}
+					else{
+						if(data[i].applied == 0){
+							<!-- Apply -->
+							ans += '<h3 class="text-right"><button class="btn btn-outline-success btn-sm" style="cursor:pointer;" onclick="applyFor('+data[i].pk+')"><i class="fas fa-check-circle"></i>&nbsp;&nbsp;Click to apply</button></h3>';
+						}
+						else{
+							<!-- Already applied -->
+							ans += '<h3 class="text-right"><button class="btn btn-outline-warning btn-sm" style="cursor:pointer;" onclick="alert(\'You have already apllied for this internship. Kindly wait for the confirmation from industry. Till then you can apply for other internships!\')"><i class="fas fa-exclamation-circle"></i>&nbsp;&nbsp;Already applied</button></h3>';
+						}
+					}
+
+
+					ans += '<br>'
+					+'<p><i style="color:#de5e60" class="far fa-calendar-alt"></i>&nbsp;&nbsp;'+data[i].startdate+' to '+data[i].enddate+'</p>'
+					+'<p><i style="color:#de5e60" class="fas fa-cogs"></i>&nbsp;&nbsp;'+data[i].type+'</p>'
+					+'<p><i style="color:#de5e60" class="fas fa-rupee-sign"></i>&nbsp;&nbsp;'+data[i].stipend+'/month</p>'
+					+'</div></div></div>';
+				}
+
+				ans = ans + '<br><br>'
+						+'<div class="col-md-12" id="internshipsPagination"><div class="col-md-12 d-flex">'
+						+'<ul class="pagination mx-auto" style="background-color:#232221;">'
+						+'<li class="page-item" onclick="prevIntPage()"><a class="page-link" href="#"aria-label="Previous" style="background-color:#232221;border-color:#a6a6a6;"> <span aria-hidden="true">«</span></a></li>';
+
+				for(var i=1; i<=parseInt(pagination); ++i){
+					ans += '<li class="page-item" onclick="searchInternships('+i+', \'no\', \'no\')"><a class="page-link" href="#" style="background-color:#232221;border-color:#a6a6a6;">'+i+'</a></li>';
+				}
+				ans += '<li class="page-item" onclick="nextIntPage()"><a class="page-link" href="#" aria-label="Next" style="background-color:#232221;border-color:#a6a6a6;"> <span aria-hidden="true">»</span></a></li></ul><br></div></div>';
+
+				document.getElementById("internshipInnerContainer").innerHTML = ans;
+			}
+		</script>
+		<div class="col-md-12" style="background-color:#232221">
+			<br><br><br><br><br>
+			<div class="col-md-12">
+				<div class="col-md-12">
+					<div class="col-md-12" style="color:#ffffff">
+						<h1>Internships & Industrial Visits</h1>
+					</div>
+					<br><br>
+					<ul style="border-bottom:2px solid #de5e60;" class="nav nav-tabs col-md-12" role="tablist">
+					  <li class="nav-item col-md-6 text-center">
+					    <a style="border:2px solid #de5e60;" class="nav-link active custom-nav-link" data-toggle="tab" onclick="searchInternships(1,\'no\',\'no\')" href="#internships" role="tab">Internships</a>
+					  </li>
+					  <li class="nav-item col-md-6 text-center">
+					    <a style="border:2px solid #de5e60;" class="nav-link custom-nav-link" data-toggle="tab"  onclick="searchIvs(1, 'no', 'no');" href="#industrialvisits" role="tab">Industrial Visits</a>
+					  </li>
+					</ul>
+					<br><br>
+					<div class="tab-content col-md-12" style="color:#ffffff">
+						<!--Internships-->
+
+
+
+					  <div class="tab-pane active text-center" id="internships" role="tabpanel">
+							<!-- Dynamic -->
+							<div id="internshipInnerContainer"></div>
+						</div>
+						<!--Industrial visits-->
+						<script>
+							ivpageno = 1;
+							ivtotno = 1;
+							function searchIvs(pageno,loc,type)
+							{
+								//document.getElementsByClassName("searchResult")[0].style.display="block";
+								$.post('/internships/industrialVisits/',{
+									'pageno':pageno,
+									'location':loc,
+									'type':type,
+									'csrfmiddlewaretoken': '{{ csrf_token }}'},
+									function(data){
+										JSON.stringify(data);
+
+										writeIVs(data);
+									}
+								);
+							}
+
+							function prevPage(){
+								if(ivpageno != 1)
+									searchIvs(--ivpageno, "no", "no");
+							}
+							function nextPage(){
+								if(ivpageno<ivtotno)
+									searchIvs(++ivpageno, "no", "no");
+							}
+
+							function writeIVs(data){
+								var ans  = '';
+								var ivd = data;
+								var pagination = data.total;
+								data = data.data;
+								for(var i=0; i<data.length; i++){
+									IMAGE_STATIC_URL = data[i].logo;
+									ans +=
+									'<br><div class="col-md-12 row nomargin" style="box-shadow:0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12); padding-top:15px; padding-bottom:15px; background-color:#2f3238;">'
+									+'<div class="col-md-3 nopadding">'
+									+'<a href="/industry/'+data[i].company+'/"><img width="100%" src="/static'+IMAGE_STATIC_URL+'" alt="Ever Last Wire Industries"></a>'
+									+'</div><div class="col-md-6 text-left" style="color:#ffffff;">'
+									+'<div class="col-md-12">'
+									+'<div class="row nomargin" style="cursor:pointer;" onclick="location.href=\'/industry/'+data[i].company+'/\'"><h3>'+data[i].company+'&nbsp;</h3><h6><i class="fas fa-external-link-alt" style="color:#5bc0de"></i></h6></div>'
+									+'<br><p>'+data[i].description+'</p></div></div>'
+									+'<div class="col-md-3 text-left"><div class="col-md-12">';
+
+									if(ivd.cannotapply == 1){
+										if(data[i].confirmed == 1){
+											<!-- confirmed -->
+											ans += '<h3 class="text-right"><button class=3w"btn btn-outline-info btn-sm"><i class="fas fa-thumbs-up"></i>&nbsp;&nbsp;Confirmed</button></h3>';
+										}
+										else{
+											if(data[i].applied == 1){
+												<!-- Already Applied -->
+												ans += '<h3 class="text-right"><button class="btn btn-outline-warning btn-sm" style="cursor:pointer;" onclick="alert(\'You have already apllied for this industrial visit. Kindly wait for the confirmation from industry. Till then you can apply for other industrial visits!\')"><i class="fas fa-exclamation-circle"></i>&nbsp;&nbsp;Already applied</button></h3>';
+											}
+											else{
+												<!-- Cannot apply -->
+												ans += '<h3 class="text-right"><button class="btn btn-outline-secondary btn-sm" style="cursor:pointer;" onclick="alert(\'Oops! Looks like you already have a confirmed industrial visit! You can get only one industrial visit at a time.\')"><i class="fas fa-exclamation-circle"></i>&nbsp;&nbsp;Can not apply</button></h3>';
+											}
+										}
+									}
+									else{
+										<!-- Apply -->
+										ans += '<h3 class="text-right"><button class="btn btn-outline-success btn-sm" style="cursor:pointer;" onclick="location.href=\'/internships/applyIV/'+data[i].pk+'\'"><i class="fas fa-check-circle"></i>&nbsp;&nbsp;Click to apply</button></h3>';
+
+									}
+
+
+
+									ans += '<br>'
+									+'<p><i style="color:#de5e60" class="far fa-calendar-alt"></i>&nbsp;&nbsp;'+data[i].duration+' days</p>'
+									+'<p><i style="color:#de5e60" class="fas fa-cogs"></i>&nbsp;&nbsp;'+ data[i].type +'</p>'
+									+'<p><i style="color:#de5e60" class="fas fa-users"></i>&nbsp;&nbsp;'+ data[i].mincnt +' students</p>'
+									+'</div></div></div>';
+								}
+
+								ans = ans + '<br><br>'
+										+'<div class="col-md-12" id="internshipsPagination"><div class="col-md-12 d-flex">'
+										+'<ul class="pagination mx-auto" style="background-color:#232221;">'
+										+'<li class="page-item" onclick="prevPage()"><a class="page-link" href="#"aria-label="Previous" style="background-color:#232221;border-color:#a6a6a6;"> <span aria-hidden="true">«</span></a></li>';
+
+								for(var i=1; i<=parseInt(pagination); ++i){
+									ans += '<li class="page-item" onclick="searchIvs('+i+', \'no\', \'no\')"><a class="page-link" href="#" style="background-color:#232221;border-color:#a6a6a6;">'+i+'</a></li>';
+								}
+								ans += '<li class="page-item" onclick="nextPage()"><a class="page-link" href="#" aria-label="Next" style="background-color:#232221;border-color:#a6a6a6;"> <span aria-hidden="true">»</span></a></li></ul><br></div></div>';
+
+								document.getElementById("ivInnerContainer").innerHTML = ans;
+							}
+						</script>
+
+						<div class="tab-pane text-center" id="industrialvisits" role="tabpanel">
+
+							<div id="ivInnerContainer"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		{% include "contact.html" %}
+	</body>
+</html>

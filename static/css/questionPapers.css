@@ -1,0 +1,220 @@
+/*General*/
+.custom-font{
+	font-family:'TitilliumText25L';
+}
+
+.nopadding {
+	padding: 0;
+}
+
+.nomargin {
+	margin: 0;
+}
+
+/*Contact block*/
+#bootstrap-override-id .contact-block-custom-input{
+	font-size:1.125rem;
+	line-height:50px;
+	color:#cdcdcd;
+	background-color:#1b1d20;
+	border:none;
+}
+#bootstrap-override-id .contact-block-custom-input:focus{
+	font-size:1.125rem;
+	line-height:50px;
+	color:#cdcdcd;
+	background-color:#1b1d20;
+	border:none;
+}
+
+#bootstrap-override-id .contact-block-custom-textarea{
+	font-size:1.125rem;
+	color:#cdcdcd;
+	background-color:#1b1d20;
+	border:none;
+}
+#bootstrap-override-id .contact-block-custom-textarea:focus{
+	font-size:1.125rem;
+	color:#cdcdcd;
+	background-color:#1b1d20;
+	border:none;
+}
+
+#bootstrap-override-id .contact-block-custom-button{
+	font-size:1.5rem;
+	line-height:50px;
+	background-color:#1b1d20;
+	color:#bb5557;
+	border:none;
+	transition:1s;
+}
+#bootstrap-override-id .contact-block-custom-button:hover{
+	font-size:1.5rem;
+	line-height:50px;
+	background-color:#bb5557;
+	color:#1b1d20;
+	border:none;
+	cursor:pointer;
+}
+
+/*MenuBar*/
+.navbar-nav > li{
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+#bootstrap-override-id .custom-navbar {
+	background-color: #2f3238;
+	box-shadow: 0px 0px 35px #888888;
+}
+
+#bootstrap-override-id .custom-nav-button {
+	color: #9d9d9d;
+	font-size: 1.25rem;
+	-moz-transition: 1s;
+	-webkit-transition: 1s;
+	-o-transition: 1s;
+}
+#bootstrap-override-id .custom-nav-button:hover {
+	color: #de5e60;
+}
+
+.dropdown-toggle::after {
+    display:none
+}
+
+#bootstrap-override-id .custom-dropdown-menu {
+	background-color: #2f3238;
+	color: #9d9d9d;
+}
+
+#bootstrap-override-id .custom-dropdown-item {
+	color: #9d9d9d;
+}
+#bootstrap-override-id .custom-dropdown-item:hover {
+	background-color: #232221;
+	color: #FFFFFF;
+}
+
+.menubar-custom-input {
+	font-size:1.25rem;
+	color:#cdcdcd;
+	background-color:#1b1d20;
+	border:none;
+}
+.menubar-custom-input:focus {
+	font-size:1.25rem;
+	color:#cdcdcd;
+	background-color:#1b1d20;
+	border:none;
+}
+
+/*Q Paper*/
+#bootstrap-override-id .custom-visit-button {
+	color:#de5e60;
+	background-color:#2f3238;
+	cursor:pointer;
+	transition: all 1s ease;
+	text-transform: none;
+}
+#bootstrap-override-id .custom-visit-button:hover {
+	color: #000000;
+	background-color: #de5e60;
+	text-transform: none;
+}
+
+#bootstrap-override-id .searchPaper{
+	border: 1px solid #ddd;
+	background-color: #2f3238;
+	border-radius: 5px;
+	border-color: #ddd;
+	color: #fff;
+	outline: none;
+	border-top-right-radius:0;
+	border-bottom-right-radius:0;
+}
+#bootstrap-override-id .heading{
+	font-weight:bold;
+	border-bottom: 4px solid #de5e60;
+	display: inline-block;
+	color:#fff;
+	margin:50px;
+}
+#bootstrap-override-id .searchContainer{
+	text-align:center;
+}
+#bootstrap-override-id .searchInnerContainer{
+	text-align:center;
+	border:none;
+}
+#bootstrap-override-id .searchInnerContainer li{
+	font-weight:bold;
+}
+#bootstrap-override-id .filterList{
+	list-style-type:none;
+	width:60px;
+}
+
+#bootstrap-override-id .filterBarButton{
+	background-color:#1b1d20;;
+	color:#fff;
+
+}
+#bootstrap-override-id .black{
+	background: #de5e60; /* Old browsers */
+	background: -moz-linear-gradient(top, #de5e60 0%, #0e0e0e 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#de5e60), color-stop(100%,#0e0e0e)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #de5e60 0%,#0e0e0e 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #de5e60 0%,#0e0e0e 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #de5e60 0%,#0e0e0e 100%); /* IE10+ */
+	background: linear-gradient(top, #de5e60 0%,#0e0e0e 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#de5e60', endColorstr='#0e0e0e',GradientType=0 ); /* IE6-9 */
+}
+#bootstrap-override-id .searchResult{
+	background-color:#2f3238;
+}
+#bootstrap-override-id .papersContainer a{
+	text-decoration:none;
+	font-size:25px;
+	color: white;
+	font-weight:bold;
+}
+#bootstrap-override-id .papersContainer span{
+	color: #de5e60;
+}
+#bootstrap-override-id .paper:hover{
+	cursor:pointer;
+	color: #de5e60;
+	font-weight:bold;
+}
+#bootstrap-override-id .papersContainer li{
+	margin:20px;
+}
+#bootstrap-override-id .paper{
+	font-size:20px;
+	color: white;
+	display:block;
+	overflow:hidden;
+	width:100%;
+}
+#bootstrap-override-id .paper:hover span{
+	color:white;
+}
+#bootstrap-override-id .papersContainer li{
+	background-color:#2f3238
+}
+#bootstrap-override-id .yearButton{
+	background-color: Transparent;
+	border-color: Transparent;
+}
+#bootstrap-override-id .yearButton:hover{
+	background-color: #212529;
+	border-color: #de5e60;
+}
+#bootstrap-override-id input[type="radio"]:checked label{
+	background-color: #212529;
+	border-color: #de5e60;
+}
+#bootstrap-override-id .customPaperLink:hover{
+	color:#de5e60;
+}

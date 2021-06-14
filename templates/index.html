@@ -1,0 +1,297 @@
+<html>
+	<title>Welcome to MechMania!</title>
+	<head>
+		{% load staticfiles %}
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<link id="fontsCSS" rel="stylesheet" type="text/css" href="{% static 'fonts/fonts.css' %}" />
+		<link id="bsCSS" rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}" />
+		<link id="cusCSS" rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}" />
+		<link type="text/css" href="{% static 'css/jscrollpane.css' %}" rel="stylesheet" media="all" />
+
+		<script src="{% static 'js/jquery-3.2.1.min.js' %}" type="text/javascript"></script>
+		<script src="{% static 'js/bootstrap.bundle.min.js' %}" type="text/javascript"></script>
+		<script src="{% static 'js/fontawesome-all.min.js' %}" type="text/javascript"></script>
+		<script src="{% static 'js/mousewheel.js' %}" type="text/javascript"></script>
+		<script src="{% static 'js/jscrollpane.min.js' %}" type="text/javascript"></script>
+
+		<script src="{% static 'js/title_notifications.js' %}" type="text/javascript"></script>
+
+	</head>
+	<body class="custom-font" id="bootstrap-override-id">
+		{% include "menubar.html" %}
+
+		<div id="home" class="carousel slide" data-ride="carousel" data-interval="5000">
+				<div class="carousel-inner" role="listbox">
+					<div class="carousel-item active">
+						<div class="container col-md-12" style="background-image: linear-gradient(to right, rgba(35, 34, 33, 1) 15%, rgba(35, 34, 33, 0.1) 100%, transparent 50%), url({% static 'images/headGalImage01.jpg' %});">
+							<br><br><br><br><br>
+							<div class="col-md-10 offset-md-1">
+								<br>
+								<h1 class="col-md-6" style="color:#a6a6a6;">Connected with 500+ industries and counting...</h1>
+								<br><br>
+								{% if not user.is_authenticated %}
+									<div class="row col-md-8">
+										<button style="background-color:#00aaff; cursor:pointer;" class="btn col-md-3 offset-md-1" onclick="window.location='/loginsignup.html'">Signup for free</button>
+										<button style="background-color:#4dff4d; cursor:pointer;" class="btn col-md-3 offset-md-1" onclick="window.location='/loginsignup.html'">Login</button>
+									</div>
+								{% endif %}
+								<br><br><br>
+							</div>
+						</div>
+					</div>
+					<div class="carousel-item">
+						<div class="container col-md-12" style="background-image: linear-gradient(to left, rgba(35, 34, 33, 1) 15%, rgba(35, 34, 33, 0.1) 100%, transparent 50%), url({% static 'images/headGalImage02.jpg' %});">
+							<br><br><br><br><br>
+							<div class="col-md-10 offset-md-1">
+								<br>
+								<h1 class="col-md-8 offset-md-4" style="color:#a6a6a6;">Internships, industrial visits, projects, recruitments and much more...</h1>
+								<br><br>
+								{% if not user.is_authenticated %}
+									<div class="row col-md-8 offset-md-4">
+										<button style="background-color:#00aaff; cursor:pointer;" class="btn col-md-3 offset-md-1" onclick="window.location='/loginsignup.html'">Signup for free</button>
+										<button style="background-color:#4dff4d; cursor:pointer;" class="btn col-md-3 offset-md-1" onclick="window.location='/loginsignup.html'">Login</button>
+									</div>
+								{% endif %}
+								<br><br><br>
+							</div>
+						</div>
+					</div>
+					<div class="carousel-item">
+						<div class="container col-md-12" style="background-image: linear-gradient(to right, rgba(35, 34, 33, 1) 15%, rgba(35, 34, 33, 0.1) 100%, transparent 50%), url({% static 'images/headGalImage03.jpg' %});">
+							<br><br><br><br><br>
+							<div class="col-md-10 offset-md-1">
+								<br>
+								<h1 class="col-md-6" style="color:#a6a6a6;">An initiative by engineers for engineers...</h1>
+								<br><br>
+								{% if not user.is_authenticated %}
+									<div class="row col-md-8">
+										<button style="background-color:#00aaff; cursor:pointer;" class="btn col-md-3 offset-md-1" onclick="window.location='/loginsignup.html'">Signup for free</button>
+										<button style="background-color:#4dff4d; cursor:pointer;" class="btn col-md-3 offset-md-1" onclick="window.location='/loginsignup.html'">Login</button>
+									</div>
+								{% endif %}
+								<br><br><br>
+							</div>
+						</div>
+					</div>
+			</div>
+		</div>
+		<!--Mid Blocks-->
+		<div id="industry" class="container col-md-12" style="background-color:#232221">
+			<br><br><br>
+			<div class="col-md-12 text-center" style="color:#ffffff"><h1>INDUSTRY</h1></div>
+			<div class="row col-md-12 nomargin">
+
+				<div class="col-md-4 nopadding">
+					<br><br>
+					<div class="col-md-12 nopadding">
+						<a href="/internships/">
+							<img class="col-md-12 custom-block-image" src="{% static 'images/internship01.jpg' %}" alt="Internships & Industrial Visits">
+						</a>
+					</div>
+					<div class="col-md-12" style="color:#ffffff">
+						<br>
+						<h3>Internships & Industrial Visits</h3>
+					</div>
+					<div class="col-md-12" style="color:#a5a5a5">
+						<div style="height:10px"></div>
+						<h5>Internships & Industrial Visits are the ways to explore the engineering beyond the syllabus. Get the professional experience of engineering and enhance your skills.</h5>
+					</div>
+					<div style="height:80px"></div>
+					<div class="col-md-12" style="position:absolute; bottom:0">
+						<div class="text-center col-md-5 offset-md-7 custom-visit-button" onclick="location.href='/internships/'">
+							<div style="height:10px"></div>
+							<h4 class="nomargin">VISIT</h4>
+							<div style="height:10px"></div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4 nopadding">
+					<br><br>
+					<div class="col-md-12 nopadding">
+						<a href="/projects/1/">
+							<img class="col-md-12 custom-block-image" src="{% static 'images/industrialProject01.jpg' %}" alt="Internships & Industrial Visits">
+						</a>
+					</div>
+					<div class="col-md-12" style="color:#ffffff">
+						<br>
+						<h3>Industrial Projects</h3>
+					</div>
+					<div class="col-md-12" style="color:#a5a5a5">
+						<div style="height:10px"></div>
+						<h5>Industrial Projects show you real engineering world beyond the books. Get the practical perspective of world of workmanship.</h5>
+					</div>
+					<div style="height:80px"></div>
+					<div class="col-md-12" style="position:absolute; bottom:0">
+						<div class="text-center col-md-5 offset-md-7 custom-visit-button" onclick="location.href='/projects/1/'">
+							<div style="height:10px"></div>
+							<h4 class="nomargin">VISIT</h4>
+							<div style="height:10px"></div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4 nopadding">
+					<br><br>
+					<div class="col-md-12 nopadding">
+						<a href="">
+							<a href="/recruitments/">
+								<img class="col-md-12 custom-block-image" src="{% static 'images/recruitment01.jpg' %}" alt="Internships & Industrial Visits">
+							</a>
+						</a>
+					</div>
+					<div class="col-md-12" style="color:#ffffff">
+						<br>
+						<h3>Recruitment</h3>
+					</div>
+					<div class="col-md-12" style="color:#a5a5a5">
+						<div style="height:10px"></div>
+						<h5>Get huge job opportunities and choose the best work for you. Its the time to meet the right industries with the right jobs!</h5>
+					</div>
+					<div style="height:80px"></div>
+					<div class="col-md-12" style="position:absolute; bottom:0">
+						<div class="text-center col-md-5 offset-md-7 custom-visit-button" onclick="location.href='/recruitments/'">
+							<div style="height:10px"></div>
+							<h4 class="nomargin">VISIT</h4>
+							<div style="height:10px"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<br><br>
+		</div>
+		<div id="academics" class="container col-md-12" style="background-color:#232221">
+			<br><br><br>
+			<div class="col-md-12 text-center" style="color:#ffffff"><h1>ACADEMICS</h1></div>
+			<div class="row col-md-12 nomargin">
+				<div class="col-md-4 nopadding">
+					<br><br>
+					<div class="col-md-12 nopadding">
+						<a href="/questionPapers/">
+							<img class="col-md-12 custom-block-image" src="{% static 'images/quepaper01.jpg' %}" alt="Internships & Industrial Visits">
+						</a>
+					</div>
+					<div class="col-md-12" style="color:#ffffff">
+						<br>
+						<h3>Question Papers</h3>
+					</div>
+					<div class="col-md-12" style="color:#a5a5a5">
+						<div style="height:10px"></div>
+						<h5>A well-managed collection of question papers from last 5 years, so Practice ‘Em All before going to exams!</h5>
+					</div>
+					<div style="height:80px"></div>
+					<div class="col-md-12" style="position:absolute; bottom:0">
+						<div class="text-center col-md-5 offset-md-7 custom-visit-button" onclick="location.href='/questionPapers/'">
+							<div style="height:10px"></div>
+							<h4 class="nomargin">VISIT</h4>
+							<div style="height:10px"></div>
+						</div>
+					</div>
+				</div>
+				<div style="opacity:0.5;" class="col-md-4 nopadding">
+					<h3 class="col-md-12 text-center" style="opacity:1; z-index:99999; color:#de5e60; position:absolute; top:70px;">Coming soon...</h3>
+					<br><br>
+					<div class="col-md-12 nopadding">
+						<a href="">
+							<img class="col-md-12 custom-block-image" src="{% static 'images/notesandtuts01.jpg' %}" alt="Internships & Industrial Visits">
+						</a>
+					</div>
+					<div class="col-md-12" style="color:#ffffff">
+						<br>
+						<h3>Notes & Tutorials</h3>
+					</div>
+					<div class="col-md-12" style="color:#a5a5a5">
+						<div style="height:10px"></div>
+						<h5>Important notes on difficult topics which will help you to understand concepts easily. Enjoy theory concepts, right here online!</h5>
+					</div>
+					<div style="height:80px"></div>
+					<div class="col-md-12" style="position:absolute; bottom:0">
+						<div class="text-center col-md-5 offset-md-7 custom-visit-button" onclick="location.href=''">
+							<div style="height:10px"></div>
+							<h4 class="nomargin">VISIT</h4>
+							<div style="height:10px"></div>
+						</div>
+					</div>
+				</div>
+				<div style="opacity:0.5;" class="col-md-4 nopadding">
+					<h3 class="col-md-12 text-center" style="opacity:1; z-index:99999; color:#de5e60; position:absolute; top:70px;">Coming soon...</h3>
+					<br><br>
+					<div class="col-md-12 nopadding">
+						<a href="">
+							<a href="">
+								<img class="col-md-12 custom-block-image" src="{% static 'images/quiz01.jpg' %}" alt="Internships & Industrial Visits">
+							</a>
+						</a>
+					</div>
+					<div class="col-md-12" style="color:#ffffff">
+						<br>
+						<h3>Quiz Competition</h3>
+					</div>
+					<div class="col-md-12" style="color:#a5a5a5">
+						<div style="height:10px"></div>
+						<h5>Compete with the students all over the world and know your position among them. Competitions are best way to evaluate yourself.</h5>
+					</div>
+					<div style="height:80px"></div>
+					<div class="col-md-12" style="position:absolute; bottom:0">
+						<div class="text-center col-md-5 offset-md-7 custom-visit-button" onclick="location.href=''">
+							<div style="height:10px"></div>
+							<h4 class="nomargin">VISIT</h4>
+							<div style="height:10px"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<br><br>
+		</div>
+		<!--About Block-->
+		<div id="about" class="container col-md-12" style="background-color:#232221">
+			<br><br><br>
+			<div class="col-md-12 text-center" style="color:#ffffff"><h1>ABOUT</h1></div>
+			<div class="col-md-12 text-center" style="color:#cdcdcd"><h4>Remember what we work for.</h4></div>
+			<br><br>
+			<div class="container col-md-12">
+				<div class="col-md-8 offset-md-2" style="color:#cdcdcd">
+					<h5>The vision of MechMania is to develop the engineering students with best engineering skills by providing them good opportunities of internships, industrial visits, Industrial projects, and much more, to explore engineering outside the classroom & real engineering world beyond the books.</h5>
+				</div>
+				<br>
+				<div class="col-md-10 offset-md-1">
+					<span class="col-md-12" style="color:#cdcdcd"><h4>What do people say about us:</h4></span>
+
+					<div id="aboutQuotes" class="carousel slide" data-ride="carousel" data-interval="5000">
+					  <div class="carousel-inner" role="listbox">
+						{% for object in Quotes %}
+							{% if object == Quotes|first %}
+								<div class="carousel-item active">
+							{% else %}
+								<div class="carousel-item">
+							{% endif %}
+									<blockquote class="col-md-10 offset-md-1 blockquote custom-blockquote" style="height:150px;">
+										<div style="height:20px"></div>
+										<p class="mb-0">{{ object.quote|safe }}</p>
+										<footer class="blockquote-footer">{{ object.quotedBy|safe }}</footer>
+										<div style="height:20px"></div>
+									</blockquote>
+								</div>
+						{% endfor %}
+					  </div>
+					  <a class="carousel-control-prev" style="padding-right:15px;" href="#aboutQuotes" role="button" data-slide="prev">
+						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+						<span class="sr-only">Previous</span>
+					  </a>
+					  <a class="carousel-control-next" style="padding-left:15px;" href="#aboutQuotes" role="button" data-slide="next">
+						<span class="carousel-control-next-icon" aria-hidden="true"></span>
+						<span class="sr-only">Next</span>
+					  </a>
+					</div>
+					<br>
+					<h5 class="col-md-6 offset-md-3 text-center"><a href="aboutus/">Meet the brains behind MechMania...</a></h5>
+					<br>
+					<br>
+				</div>
+			</div>
+		</div>
+
+		{% include "contact.html" %}
+	</body>
+</html>

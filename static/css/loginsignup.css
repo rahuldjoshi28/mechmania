@@ -1,0 +1,17 @@
+/*General*/
+.custom-font{
+	font-family:'TitilliumText25L';
+}
+
+.nopadding {
+	padding: 0;
+}
+
+.nomargin {
+	margin: 0;
+}
+
+.custom-tab-box {
+	border: 1px solid #dddddd;
+	border-top: none;
+}

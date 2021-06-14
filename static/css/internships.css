@@ -1,0 +1,200 @@
+body {
+				background-color:#2f3238;
+			}
+			.industryListHeading{
+				height:30%;
+				width:100%;
+				text-align:left;
+				vertical-align:middle;
+				color:#fff;
+				background-color:#232221;
+				padding: 3% 0 3% 5%;
+				clear:both;
+				display:block;
+				margin: 0 0 0 0;
+			}
+			*{
+				font-family:TitilliumText25L;
+			}
+			.headingText{
+				diplay:inline-block;
+				font-size:3vw;
+				font-weight:bold;
+				border-bottom: 5px solid #de5e60;
+				font-weight: bold;
+				display: inline-block;
+				color: #fff;
+
+			}
+			.pageContainer{
+				width:100%;
+			}
+			.detailsPageHeading{
+				height:30%;
+				width:95%;
+				text-align:left;
+				vertical-align:middle;
+				color:#fff;
+				background-color:#232221;
+				padding: 3% 0 3% 5%;
+				clear:both;
+				diplay:inline-block;
+				font-size:3vw;
+				font-weight:bold;
+			}
+
+
+			.indPageSelector{
+				display:inline-block;
+				margin:0;
+				margin-top:20;
+				padding:0;
+				line-height:4vw;
+				
+				font-weight:bold;
+				outline:none;
+				cursor:pointer;
+				float:left;
+				color:#fff;
+				background-color:inherit;
+				border:none;
+				border-bottom:2px solid #de5e60;
+				
+				font-size-adjust:0.5;
+			}
+			.indPageSelector:hover{
+				background-color:#232221;
+			}
+			.indPageSelector.active{
+				background-color:#232221;
+				border:2px solid #de5e60;
+				border-bottom:none;
+			}
+			
+			.clearfix::after {
+				content: "";
+				display: block;
+				clear: both;
+				visibility: hidden;
+			}
+
+			.clearfix {
+				overflow: hidden;
+				display: block;
+			}
+
+			html[xmlns] .clearfix {
+				display: block;
+			}
+
+			* html .clearfix {
+				height: 1%;
+			}
+			
+			.indPageTabContent{
+				display:block;
+			}
+			
+			*:focus {
+				outline: none;
+			}
+			
+			.leftInfoBlock{
+				padding-top:0.7vw;
+			}
+			.rightInfoBlock{
+				display:inline-block;
+			}
+			.infoBlock{
+				background-color: #232221;
+				cursor: pointer;
+			}
+
+			/*.infoBlockImg{
+				display: inline-block;
+				/*top: 10%;
+				bottom: 10%;
+				right: 3%;
+				left: 5%;
+				height: 80%;
+				width: 30%;
+				float: left;
+				
+			}*/
+
+			.infoBlockText{
+				
+			}
+
+			.infoBlockHeading{
+				color: #fff;
+				font-size: 2.5vw;
+			}
+
+			.infoBlockDescription{
+				font-size: 1.25vw;
+				color: #fff;
+			}
+
+			.infoBlockDetails{
+				font-size: 1.5vw;
+				color: #fff;
+			}
+
+			.vr{
+				width: 2px;
+				height: 60%;
+				position: absolute;
+				display: inline-block;
+				color: #de5e60;
+				background-color: #de5e60;
+				border: none;
+				margin: 0% 0% 0% 8%;
+			}
+
+			.moreDetails{
+				background-color: #232221;
+				width: 100%;
+			}
+
+			.detailsBlockDetails{
+				font-size: 1.25vw;
+				color: #fff;
+				word-wrap: break-word;
+				width: 100%;
+				padding: 2% 5% 2% 5%;
+			}
+
+			.detailsButton{
+				color: #bb5557;
+				background-color: #1b1d20;
+				font-weight: bold;
+				cursor: pointer;
+				text-decoration:none;
+				border-radius:20px;
+				font-weight:bold;
+				border: 2px solid #bb5557;
+				-moz-transition: 1s;
+				-webkit-transition: 1s;
+				-o-transition: 1s;
+				transition: 1s;
+			}
+
+			.detailsButton:hover{
+				background-color: #bb5557;
+				color: #1b1d20;
+			}
+			/*
+			.infoBlockHR{
+				position: absolute;
+				display: inline-block;
+				color: #de5e60;
+				background-color: #de5e60;
+				border: none;
+				margin: 0 0 0 15%;
+			}
+*/
+			.indPageTabContent{
+				background-color:#232221;
+				/*display:none;*/
+			}

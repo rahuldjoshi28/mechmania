@@ -1,0 +1,692 @@
+<html>
+	<title>Welcome to MechMania!</title>
+	<head>
+		{% load staticfiles %}
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<link id="fontsCSS" rel="stylesheet" type="text/css" href="{% static 'fonts/fonts.css' %}" />
+		<link id="bsCSS" rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}" />
+		<link id="bsCSS" rel="stylesheet" type="text/css" href="{% static 'css/index-admin.css' %}" />
+
+		<script src="{% static 'js/jquery-3.2.1.min.js' %}" type="text/javascript"></script>
+		<script src="{% static 'js/bootstrap.bundle.min.js' %}" type="text/javascript"></script>
+		<script src="{% static 'js/fontawesome-all.min.js' %}" type="text/javascript"></script>
+		<script src="{% static 'js/index-admin.js' %}" type="text/javascript"></script>
+
+		<script type="text/javascript">
+			function changeTerm(str)
+			{
+				document.getElementById('dropdownTermButton').innerHTML = str;
+			}
+
+			function saveQuotes()
+			{
+				table = document.getElementById('QuotesTable');
+				rowCount = table.rows.length;
+				quotes = new Array();
+				quotedBys = new Array();
+
+				for(i=1;i<rowCount;i++)
+				{
+					row = table.rows[i];
+					quote = row.cells[0].innerHTML;
+					quotedBy = row.cells[1].innerHTML;
+					quotes.push(quote);
+					quotedBys.push(quotedBy);
+				}
+
+				$.post('/adminaccess/saveQuotes/',{
+					'quote': JSON.stringify(quotes),
+					'quotedBy': JSON.stringify(quotedBys),
+					'csrfmiddlewaretoken': '{{ csrf_token }}'},
+					function(data){
+						if(data == 'pass')
+						{
+							alert('Saved successfully!');
+						}
+						else
+						{
+							alert('Failed to save!');
+						}
+				});
+			}
+
+			function deleteFromPapers(pk, calle)
+			{
+				$.post('/adminaccess/deletePaper/',{
+					'id': pk,
+					'csrfmiddlewaretoken': '{{ csrf_token }}'},
+					function(data){
+						if(data == 'pass')
+						{
+							calle.parentNode.parentNode.removeChild(calle.parentNode);
+						}
+						else
+						{
+							alert('Failed to delete paper!');
+						}
+				});
+			}
+		</script>
+	</head>
+	<body class="custom-font" id="bootstrap-override-id">
+		{% include "menubar.html" %}
+
+		{% if user.is_authenticated %}
+			<!--admin blocks-->
+			<div id="home" class="container col-md-12" style="background-color:#232221">
+			<br><br><br><br><br>
+			<div class="col-md-12 text-center" style="color:#ffffff"><h1>Admin Dashboard</h1></div>
+			<br>
+			<div class="card col-md-12">
+				<div class="card-header">
+					<h5>Pending actions...</h5>
+				</div>
+				<div class="card-block" style="background-color:#212529;">
+					<br>
+					<style>
+							#bootstrap-override-id .nav-item .active {
+								background-color:#2f3238;
+								color:#ffffff;
+							}
+					</style>
+					<script type="text/javascript">
+						function confirmRequest(uid,cpk){
+							$.post("/internships/confirm/",
+							{
+								"uid": uid,
+								"internship": cpk,
+								'csrfmiddlewaretoken': '{{ csrf_token }}'
+							},
+							function(data){
+								//alert(data);
+							});
+							location.reload();
+						}
+
+						function register(userId){
+							$.post("/recruitments/confirm",
+							{
+								"uid": userId,
+								"recId": 1,
+								'csrfmiddlewaretoken': '{{ csrf_token }}'
+							},
+							function(data){
+								//alert(data);
+							});
+							location.reload();
+						}
+
+						function confirm(a)
+						{
+							$.post("/internships/confirmIV/",{'data':a,'IVId':'1','csrfmiddlewaretoken': '{{ csrf_token }}'},function(data){
+								if(data.data!='success')
+									alert("Failed to confirm!");
+								location.reload();
+							});
+						}
+
+						function cancle(a)
+						{
+							$.post("/internships/cancleGroup/",{'data':a,'IVId':'1','csrfmiddlewaretoken': '{{ csrf_token }}'},function(data){
+								if(data.data!='success')
+									alert("Failed to cancel!");
+								location.reload();
+							});
+						}
+					</script>
+					<ul style="border-bottom:2px solid #de5e60;" class="nav nav-tabs col-md-10 offset-md-1" role="tablist">
+					  <li class="nav-item col-md-3 text-center">
+					    <a style="border:2px solid #de5e60;" class="nav-link active custom-nav-link" data-toggle="tab" href="#internships" role="tab">Internships</a>
+					  </li>
+					  <li class="nav-item col-md-3 text-center">
+					    <a style="border:2px solid #de5e60;" class="nav-link custom-nav-link" data-toggle="tab" href="#industrialvisits" role="tab">Industrial Visits</a>
+					  </li>
+					  <li class="nav-item col-md-3 text-center">
+					    <a style="border:2px solid #de5e60;" class="nav-link custom-nav-link" data-toggle="tab" href="#projects" role="tab">Projects</a>
+					  </li>
+					  <li class="nav-item col-md-3 text-center">
+					    <a style="border:2px solid #de5e60;" class="nav-link custom-nav-link" data-toggle="tab" href="#recruitments" role="tab">Recruitments</a>
+					  </li>
+					</ul>
+					<br><br>
+					<div class="tab-content col-md-12" style="color:#ffffff">
+						<div class="tab-pane text-center col-md-10 offset-md-1 show" id="internships" role="tabpanel">
+							<table align="center" valign="middle" class="text-center table table-dark table-bordered table-hover" style="background-color:#1b1d20;">
+								<thead>
+									<tr>
+										<th width="35%">Industry</th>
+										<th width="10%">I ID</th>
+										<th width="20%">I Type</th>
+										<th width="20%">Username</th>
+										<th width="15%">Confirm / Reject</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for ir in irequest %}
+										<tr>
+											<td>{{ ir.internship.company.name }}</td>
+											<td>{{ ir.internship.pk }}</td>
+											<td>{{ ir.internship.type }}</td>
+											<td><a href="/username/{{ ir.user.user.username }}/">{{ ir.user.user.username }}</a></td>
+											<td><button style="color:GREEN;" class="btn btn-secondary" onclick="confirmRequest({{ ir.user.user.pk }},{{ ir.internship.company.pk }})"><i class="fas fa-check"></i></button> / <button style="color:RED;" class="btn btn-secondary"><i class="fas fa-times"></i></button></td>
+										</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+						<div class="tab-pane text-center col-md-10 offset-md-1" id="industrialvisits" role="tabpanel">
+							<table align="center" valign="middle" class="text-center table table-dark table-bordered table-hover" style="background-color:#1b1d20;">
+								<thead>
+									<tr>
+										<th width="35%">Industry</th>
+										<th width="10%">IV ID</th>
+										<th width="20%">IV Type</th>
+										<th width="20%">Username</th>
+										<th width="15%">Confirm / Reject</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for iv in ivrequest %}
+										<tr>
+											<td>{{ iv.IV.company.name }}</td>
+											<td>{{ iv.IV.pk }}</td>
+											<td>{{ iv.IV.type }}</td>
+											<td><a href="/username/{{ iv.user.user.username }}/">{{ iv.user.user.username }}</a></td>
+											<td><button style="color:GREEN;" class="btn btn-secondary" onclick="confirm('{{ iv.user.user.username }}')"><i class="fas fa-check"></i></button> / <button style="color:RED;" class="btn btn-secondary" onclick="cancle({{ iv.user.user.username }})"><i class="fas fa-times"></i></button></td>
+										</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+						<div class="tab-pane text-center col-md-10 offset-md-1" id="recruitments" role="tabpanel">
+							<table align="center" valign="middle" class="text-center table table-dark table-bordered table-hover" style="background-color:#1b1d20;">
+								<thead>
+									<tr>
+										<th width="35%">Industry</th>
+										<th width="10%">R ID</th>
+										<th width="20%">R Post</th>
+										<th width="20%">Username</th>
+										<th width="15%">Confirm / Reject</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for rr in rrequest %}
+										<tr>
+											<td>{{ rr.recruitment.industry.name }}</td>
+											<td>{{ rr.recruitment.pk }}</td>
+											<td>{{ rr.recruitment.type }}</td>
+											<td><a href="/username/{{ rr.user.user.username }}/">{{ rr.user.user.username }}</a></td>
+											<td><button style="color:GREEN;" class="btn btn-secondary" onclick="register({{ rr.user.user.pk }})"><i class="fas fa-check"></i></button> / <button style="color:RED;" class="btn btn-secondary"><i class="fas fa-times"></i></button></td>
+										</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<br>
+			</div>
+			<br>
+			<div class="col-md-12">
+				<div class="row col-md-12 nomargin">
+					<div class="col-md-7">
+						<br>
+						<div class="card col-md-12">
+						  <div class="card-header">
+						    <h5>Upload 	question papers...</h5>
+						  </div>
+						  <div class="card-block" style="background-color:#212529;">
+								<br>
+								<form method="post" action="/questionPapers/uploadsuccess/" enctype="multipart/form-data">
+							  	{% csrf_token %}
+									<div class="row col-md-12 nomargin">
+										<div class="form-group col-md-6" style="margin-bottom:0.2em">
+								    	<input class="form-control font-weight-bold contact-block-custom-input" type="text" id="subject" name="subject" placeholder="Subject" required>
+										</div>
+										<div class="form-group col-md-6" style="margin-bottom:0.2em">
+								    	<input class="form-control font-weight-bold contact-block-custom-input" type="text" id="school" name="school" placeholder="College/School" required>
+										</div>
+									</div>
+									<br>
+									<div class="row col-md-12 nomargin">
+										<div class="form-group col-md-6" style="margin-bottom:0.2em">
+								    	<input class="form-control font-weight-bold contact-block-custom-input" type="number" id="year" name="year" placeholder="Year" required>
+										</div>
+										<div class="col-md-6 form-group">
+											<select name="term" class="col-md-12 form-control font-weight-bold contact-block-custom-input">
+										    <option value="-">-</option>
+										    <option value="mse">MSE</option>
+										    <option value="ese">ESE</option>
+										    <option value="mup">MUP</option>
+										  </select>
+										</div>
+									</div>
+									<br>
+									<div class="row col-md-12 nomargin">
+										<div class="form-group col-md-12" style="margin-bottom:0.2em">
+								    	<textarea class="form-control font-weight-bold contact-block-custom-textarea" rows="3" type="text" id="description" name="description" placeholder="Description..."></textarea>
+										</div>
+									</div>
+									<br>
+									<div class="row col-md-12 nomargin">
+										<div class="form-group col-md-6" style="margin-bottom:0.2em">
+											<div style="background-color:buttonface; color:buttontext;" class="btn col-md-12" onclick="document.getElementById('qPaperFileInput').click()">Choose file</div>
+											<input id="qPaperFileInput" style="display:none;" type="file" name="file" required>
+										</div>
+										<div class="form-group col-md-6" style="margin-bottom:0.2em">
+											<input class="col-md-12 btn" type="submit" value="Submit">
+										</div>
+									</div>
+							  </form>
+						  </div>
+							<div class="card-footer text-center" style="background-color:#212529; color:#cdcdcd;">
+								<a data-toggle="collapse" href="#collapseQPaperList" aria-expanded="false" aria-controls="collapseQPaperList">
+									<h6>view all papers &#x25BC;</h6>
+								</a>
+								<div class="collapse" id="collapseQPaperList">
+										<table id="PapersTable" class="table table-dark table-bordered table-hover" style="background-color:#1b1d20;">
+										  <thead>
+										  </thead>
+										  <tbody>
+												{% if Papers|length == 0 %}
+													<tr>
+														<td>No papers uploaded!</td>
+													</tr>
+												{% endif %}
+												{% for paper in Papers %}
+											    <tr>
+											      <td>{{ paper.college }}-{{ paper.subject }}-{{ paper.term }}-{{ paper.year }}.pdf</td>
+														<td class="text-center" style="cursor:pointer;" onclick="deleteFromPapers({{ paper.pk }},this)"><i class="fas fa-times custom-icon-delete"></i></td>
+											    </tr>
+												{% endfor %}
+										  </tbody>
+										</table>
+								</div>
+							</div>
+							<br>
+						</div>
+					</div>
+					<div class="col-md-5">
+						<br>
+						<div class="card col-md-12">
+						  <div class="card-header">
+						    <h5>What do people say about us:</h5>
+						  </div>
+						  <div class="card-block">
+								<table id="QuotesTable" class="table table-dark table-bordered table-hover">
+								  <thead>
+								    <tr>
+								      <th width="60%" scope="col">Quote</th>
+								      <th scope="col">Quoted by</th>
+											<th scope="col"></th>
+								    </tr>
+								  </thead>
+								  <tbody>
+										{% for object in Quotes %}
+									    <tr>
+									      <td contenteditable="true">{{ object.quote|safe }}</td>
+									      <td contenteditable="true">{{ object.quotedBy|safe }}</td>
+												<td><i class="fas fa-times custom-icon-delete" onclick="deleteRowFromQuotes(this)"></i></td>
+									    </tr>
+								    {% endfor %}
+								  </tbody>
+								</table>
+								<div class="col-md-12 text-right">
+									<button class="btn" style="cursor:pointer;" onclick="addRowToQuotes()"><i class="fas fa-plus"></i></button>
+									&nbsp;
+									<button class="btn" style="cursor:pointer;" onclick="saveQuotes()"><i class="fas fa-save"></i></button>
+								</div>
+								<div style="height:10px"></div>
+						  </div>
+						</div>
+					</div>
+				</div>
+
+				<!-- my  -->
+
+
+				<br><br>
+				<div class="col-md-12 nopadding">
+					<div class="card col-md-12">
+						<div class="card-header">
+							<h5>Upload 	Industry  Data...</h5>
+						</div>
+						<div class="card-block" style="background-color:#212529;">
+							<br>
+							<form method="post" action="/internships/uploadIndustryData/" enctype="multipart/form-data">
+								{% csrf_token %}
+								<div class="row col-md-12 nomargin">
+										<div class="form-group col-md-4" style="margin-bottom:0.2em">
+											<input class="form-control font-weight-bold contact-block-custom-input" type="number" id="industryId" name="id" placeholder="Industry ID (Use only if updating)"></input>
+										</div>
+										<div class="form-group col-md-8" style="margin-bottom:0.2em">
+											<input class="form-control font-weight-bold contact-block-custom-input" type="text" id="name" name="name" placeholder="Industry Name..."></input>
+										</div>
+										<br><br><br>
+								</div>
+								<br>
+								<div class="row col-md-12 nomargin">
+									<div class="form-group col-md-12" style="margin-bottom:0.2em">
+										<textarea class="form-control font-weight-bold contact-block-custom-textarea" rows="3" type="text" id="description" name="description" placeholder="Description..."></textarea>
+									</div>
+								</div><br>
+								<div class="row col-md-12 nomargin">
+									<div class="form-group col-md-6" style="margin-bottom:0.2em">
+										<textarea class="form-control font-weight-bold contact-block-custom-textarea"type="text" id="address" name="address" placeholder="Address" required></textarea>
+									</div>
+									<div class="col-md-6 form-group">
+										<input class="form-control font-weight-bold contact-block-custom-input" type="text" id="city" name="city" placeholder="City" required>
+									</div>
+								</div>
+								<br>
+								<div class="row col-md-12 nomargin">
+									<div class="form-group col-md-6" style="margin-bottom:0.2em">
+										<input class="form-control font-weight-bold contact-block-custom-input" type="text" id="mail" name="mail" placeholder="Mail ID" required>
+									</div>
+									<div class="col-md-6 form-group">
+										<input class="form-control font-weight-bold contact-block-custom-input" type="text" id="website" name="website" placeholder="Website" required>
+									</div>
+								</div>
+								<br>
+
+								<div class="row col-md-12 nomargin">
+									<div class="form-group col-md-6" style="margin-bottom:0.2em">
+										<div style="background-color:buttonface; color:buttontext;" class="btn col-md-12" onclick="document.getElementById('industryLogoFileInput').click()">Choose logo: 600x400 .jpg only</div>
+										<input id="industryLogoFileInput" style="display:none;" type="file" name="file" required>
+									</div>
+									<div class="form-group col-md-6" style="margin-bottom:0.2em">
+										<input class="col-md-12 btn" type="submit" value="Submit">
+									</div>
+								</div>
+							</form>
+						</div>
+						<div class="card-footer text-center" style="background-color:#212529; color:#cdcdcd;">
+							<a data-toggle="collapse" href="#industryList" aria-expanded="false" aria-controls="industryList">
+								<h6>view all industries &#x25BC;</h6>
+							</a>
+							<div class="collapse" id="industryList">
+									<table id="PapersTable" class="table table-dark table-bordered table-hover col-md-12" style="background-color:#1b1d20;">
+
+										<thead>
+											<tr>
+												<th valign="middle" width="5%" scope="col" class="text-center" >ID</th>
+												<th valign="middle" width="20%" scope="col">Name</th>
+												<th valign="middle" width="20%" scope="col">Description</th>
+												<th valign="middle" width="20%" scope="col">Address</th>
+												<th valign="middle" width="10%" scope="col">Mail</th>
+												<th valign="middle" width="10%" scope="col">City</th>
+												<th valign="middle" width="10%" scope="col">Web</th>
+												<th valign="middle" width="5%" scope="col" class="text-center"></th>
+											</tr>
+										</thead>
+										<tbody>
+											{% if industryData|length == 0 %}
+												<tr>
+													<td colspan="8">No papers uploaded!</td>
+												</tr>
+											{% endif %}
+											{% for industry in industryData %}
+												<tr>
+													<th valign="middle" width="5%" scope="col" class="text-center" >{{ industry.pk }}</th>
+													<th valign="middle" width="20%" scope="col">{{ industry.name }}</th>
+													<th valign="middle" width="20%" scope="col">{{ industry.description }}</th>
+													<th valign="middle" width="20%" scope="col">{{ industry.address }}</th>
+													<th valign="middle" width="10%" scope="col">{{ industry.mail }}</th>
+													<th valign="middle" width="10%" scope="col">{{ industry.city }}</th>
+													<th valign="middle" width="10%" scope="col">{{ industry.website }}</th>
+													<th valign="middle" width="5%" scope="col" class="text-center" style="cursor:pointer;"><i class="fas fa-times custom-icon-delete"></i></th>
+												</tr>
+											{% endfor %}
+										</tbody>
+									</table>
+							</div>
+						</div>
+						<br>
+					</div>
+				</div>
+
+				<br><br>
+				<div class="col-md-12 nopadding">
+					<div class="card col-md-12">
+						<div class="card-header">
+							<h5>Upload 	Internship  Data...</h5>
+						</div>
+						<div class="card-block" style="background-color:#212529;">
+							<br>
+							<form method="post" action="/questionPapers/uploadsuccess/" enctype="multipart/form-data">
+								{% csrf_token %}
+								<div class="row col-md-12 nomargin">
+							<!--<div class="form-group col-md-6" style="margin-bottom:0.2em">
+										<input class="form-control font-weight-bold contact-block-custom-input" type="text" id="subject" name="subject" placeholder="Subject" required>
+									</div>-->
+
+										<div class="form-group col-md-12" style="margin-bottom:0.2em">
+											<input class="form-control font-weight-bold contact-block-custom-textarea" rows="2" type="text" id="id" name="id" placeholder="Industry ID..."></input>
+										</div>
+										<br><br>
+								</div>
+								<br>
+								<div class="row col-md-12 nomargin">
+									<div class="form-group col-md-12" style="margin-bottom:0.2em">
+										<textarea class="form-control font-weight-bold contact-block-custom-textarea" rows="3" type="text" id="internshipdescription" name="internshipdescription" placeholder="Internship Description..."></textarea>
+									</div>
+								</div><br>
+								<div class="row col-md-12 nomargin">
+									<div class="form-group col-md-12" style="margin-bottom:0.2em">
+										<input class="form-control font-weight-bold contact-block-custom-input" type="text" id="date" name="date" placeholder="Date" required>
+									</div>
+
+								</div>
+								<br>
+								<div class="row col-md-12 nomargin">
+									<div class="form-group col-md-6" style="margin-bottom:0.2em">
+										<input class="form-control font-weight-bold contact-block-custom-input" type="text" id="address" name="address" placeholder="Address" required>
+									</div>
+									<div class="col-md-6 form-group">
+										<input class="form-control font-weight-bold contact-block-custom-input" type="text" id="stipend" name="stipend" placeholder="Stipend" required>
+									</div>
+								</div>
+								<br>
+
+								<div class="row col-md-12 nomargin">
+
+									<div class="form-group col-md-12" style="margin-bottom:0.2em">
+										<input class="col-md-12 btn" type="submit" value="Submit">
+									</div>
+								</div>
+							</form>
+						</div>
+						<div class="card-footer text-center" style="background-color:#212529; color:#cdcdcd;">
+							<a data-toggle="collapse" href="#internshipsList" aria-expanded="false" aria-controls="internshipsList">
+								<h6>view all papers &#x25BC;</h6>
+							</a>
+							<div class="collapse" id="internshipsList">
+									<table id="PapersTable" class="table table-dark table-bordered table-hover col-md-12" style="background-color:#1b1d20;">
+
+										<thead></thead>
+										<tbody>
+											<!--{% if Papers|length == 0 %}
+												<tr>
+													<td>No papers uploaded!</td>
+												</tr>
+											{% endif %}
+											{% for paper in Papers %}
+												<tr>
+													<td>{{ paper.college }}-{{ paper.subject }}-{{ paper.term }}-{{ paper.year }}.pdf</td>
+													<td class="text-center" style="cursor:pointer;" onclick="deleteFromPapers({{ paper.pk }},this)"><i class="fas fa-times custom-icon-delete"></i></td>
+												</tr>
+											{% endfor %}-->
+											<tr>
+												<td valign="middle"width="10%"scope="col"class="text-center" >1</td>
+												<td valign="middle"width="75%"scope="col">Samruddhi Industry</td>
+												<td valign="middle"width="15%"scope="col"class="text-center" style="cursor:pointer;"><i class="fas fa-times custom-icon-delete"></i></td>
+											</tr>
+											<tr>
+												<td valign="middle"width="10%"scope="col"class="text-center" >2</td>
+												<td valign="middle"width="75%"scope="col">Bajaj Industry</td>
+												<td valign="middle"width="15%"scope="col"class="text-center" style="cursor:pointer;"><i class="fas fa-times custom-icon-delete"></i></td>
+											</tr>
+										</tbody>
+									</table>
+							</div>
+						</div>
+						<br>
+					</div>
+				</div>
+
+				<br><br>
+				<div class="col-md-12 nopadding">
+					<div class="card col-md-12">
+						<div class="card-header">
+							<h5>Upload Industrial Visit Data...</h5>
+						</div>
+						<div class="card-block" style="background-color:#212529;">
+							<br>
+							<form method="post" action="/questionPapers/uploadsuccess/" enctype="multipart/form-data">
+								{% csrf_token %}
+								<div class="row col-md-12 nomargin">
+							<!--<div class="form-group col-md-6" style="margin-bottom:0.2em">
+										<input class="form-control font-weight-bold contact-block-custom-input" type="text" id="subject" name="subject" placeholder="Subject" required>
+									</div>-->
+
+										<div class="form-group col-md-12" style="margin-bottom:0.2em">
+											<input class="form-control font-weight-bold contact-block-custom-textarea" rows="2" type="text" id="id" name="id" placeholder="Industry ID..."></input>
+										</div>
+										<br><br>
+								</div>
+								<br>
+								<div class="row col-md-12 nomargin">
+									<div class="form-group col-md-12" style="margin-bottom:0.2em">
+										<textarea class="form-control font-weight-bold contact-block-custom-textarea" rows="3" type="text" id="ivdescription" name="ivdescription" placeholder="Industrial Visit Description..."></textarea>
+									</div>
+								</div><br>
+								<div class="row col-md-12 nomargin">
+									<div class="form-group col-md-12" style="margin-bottom:0.2em">
+										<input class="form-control font-weight-bold contact-block-custom-input" type="text" id="date" name="date" placeholder="Date" required>
+									</div>
+
+								</div>
+								<br>
+								<div class="row col-md-12 nomargin">
+									<div class="form-group col-md-6" style="margin-bottom:0.2em">
+										<input class="form-control font-weight-bold contact-block-custom-input" type="text" id="type" name="type" placeholder="Type" required>
+									</div>
+									<div class="col-md-3 form-group">
+										<input class="form-control font-weight-bold contact-block-custom-input" type="text" id="min" name="min" placeholder="Minimum Students" required>
+									</div>
+									<div class="col-md-3 form-group">
+										<input class="form-control font-weight-bold contact-block-custom-input" type="text" id="max" name="max" placeholder="Maximum Students" required>
+									</div>
+								</div>
+								<br>
+
+								<div class="row col-md-12 nomargin">
+
+									<div class="form-group col-md-12" style="margin-bottom:0.2em">
+										<input class="col-md-12 btn" type="submit" value="Submit">
+									</div>
+								</div>
+							</form>
+						</div>
+						<div class="card-footer text-center" style="background-color:#212529; color:#cdcdcd;">
+							<a data-toggle="collapse" href="#ivList" aria-expanded="false" aria-controls="ivList">
+								<h6>view all papers &#x25BC;</h6>
+							</a>
+							<div class="collapse" id="ivList">
+									<table id="PapersTable" class="table table-dark table-bordered table-hover col-md-12" style="background-color:#1b1d20;">
+
+										<thead></thead>
+										<tbody>
+											<!--{% if Papers|length == 0 %}
+												<tr>
+													<td>No papers uploaded!</td>
+												</tr>
+											{% endif %}
+											{% for paper in Papers %}
+												<tr>
+													<td>{{ paper.college }}-{{ paper.subject }}-{{ paper.term }}-{{ paper.year }}.pdf</td>
+													<td class="text-center" style="cursor:pointer;" onclick="deleteFromPapers({{ paper.pk }},this)"><i class="fas fa-times custom-icon-delete"></i></td>
+												</tr>
+											{% endfor %}-->
+											<tr>
+												<td valign="middle"width="10%"scope="col"class="text-center" >1</td>
+												<td valign="middle"width="75%"scope="col">Samruddhi Industry</td>
+												<td valign="middle"width="15%"scope="col"class="text-center" style="cursor:pointer;"><i class="fas fa-times custom-icon-delete"></i></td>
+											</tr>
+											<tr>
+												<td valign="middle"width="10%"scope="col"class="text-center" >2</td>
+												<td valign="middle"width="75%"scope="col">Bajaj Industry</td>
+												<td valign="middle"width="15%"scope="col"class="text-center" style="cursor:pointer;"><i class="fas fa-times custom-icon-delete"></i></td>
+											</tr>
+										</tbody>
+									</table>
+							</div>
+						</div>
+
+						<br>
+					</div>
+				</div>
+
+				<br><br>
+				<div class="col-md-12 nopadding">
+					<div class="card col-md-12">
+						<div class="card-header">
+							<h5>Sending Notifications...</h5>
+						</div>
+						<div class="card-block" style="background-color:#212529;">
+							<br>
+							<form method="post" action="/questionPapers/uploadsuccess/" enctype="multipart/form-data">
+								{% csrf_token %}
+								<div class="row col-md-12 nomargin">
+							<!--<div class="form-group col-md-6" style="margin-bottom:0.2em">
+										<input class="form-control font-weight-bold contact-block-custom-input" type="text" id="subject" name="subject" placeholder="Subject" required>
+									</div>-->
+
+										<div class="form-group col-md-12" style="margin-bottom:0.2em">
+											<input class="form-control font-weight-bold contact-block-custom-textarea" rows="2" type="text" id="title" name="title" placeholder="Title..."></input>
+										</div>
+										<br><br>
+								</div>
+								<br>
+								<div class="row col-md-12 nomargin">
+									<div class="form-group col-md-12" style="margin-bottom:0.2em">
+										<textarea class="form-control font-weight-bold contact-block-custom-textarea" rows="3" type="text" id="notification_text" name="notification_text" placeholder="Notification..."></textarea>
+									</div>
+								</div><br>
+								<div class="row col-md-12 nomargin">
+									<div class="form-group col-md-6" style="margin-bottom:0.2em">
+										<input class="form-control font-weight-bold contact-block-custom-input" type="text" id="postedby" name="postedby" placeholder="Posted by" required>
+
+									</div>
+									<div class="col-md-6 form-group">
+										<input class="form-control font-weight-bold contact-block-custom-input" type="text" id="postedto" name="postedto" placeholder="Posted to" required>
+									</div>
+								</div>
+								<br>
+
+								<div class="row col-md-12 nomargin">
+
+									<div class="form-group col-md-12" style="margin-bottom:0.2em">
+										<input class="col-md-12 btn" type="submit" value="Submit">
+									</div>
+								</div>
+							</form>
+						</div>
+						<br>
+					</div>
+				</div>
+
+
+<!-- end of mrunal -->
+			</div>
+		{% endif %}
+		<div class="col-md-12 text-center align-middle" style="background-color:#232221; color:#cdcdcd">
+			<br><br>
+			<span class="small">2017 - MECHMANIA</span>
+			<br><br><br>
+		</div>
+	</body>
+</html>

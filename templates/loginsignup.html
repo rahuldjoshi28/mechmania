@@ -1,0 +1,151 @@
+<html>
+	<title>Welcome to MechMania!</title>
+	<head>
+		{% load staticfiles %}
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<link id="fontsCSS" rel="stylesheet" type="text/css" href="{% static 'fonts/fonts.css' %}" />
+		<link id="bsCSS" rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}" />
+		<link id="cusCSS" rel="stylesheet" type="text/css" href="{% static 'css/loginsignup.css' %}" />
+	</head>
+	<body class="custom-font">
+		<br>
+		<div class="col-md-4 offset-md-4">
+			<div class="col-md-10 offset-md-1">
+				<img class="col-md-12" src="{% static 'images/logo.png' %}">
+				<div class="col-md-6 offset-md-3" style="border-top: 1px solid #dddddd;">
+				</div>
+			</div>
+		</div>
+		<br><br>
+		<div class="col-md-6 offset-md-3">
+			<ul class="nav nav-tabs text-center">
+			  <li class="nav-item col-md-6 nopadding">
+			    <a class="nav-link active" id="loginTabButton" data-toggle="tab" href="#login"><h5>Login</h5></a>
+			  </li>
+			  <li class="nav-item col-md-6 nopadding">
+			    <a class="nav-link" id="signupTabButton" data-toggle="tab" href="#signup"><h5>Signup</h5></a>
+			  </li>
+			</ul>
+
+			<div class="container-fluid custom-tab-box">
+			  <div class="tab-content">
+			    <div role="tabpanel" class="tab-pane fade in active" id="login">
+						<br>
+						<form method="post" action="/login.html">
+							<center>
+								<br><br>
+								{% csrf_token %}
+							</center>
+							{% if request.GET.next %}
+								<input type="hidden" name="next" value="{{ request.GET.next }}" />
+							{% endif %}
+							{% if form.errors %}
+								<span class="col-md-6 offset-md-3" style="color:RED">Incorrect username/password</span>
+								<br><br>
+							{% endif %}
+							<div class="container-fluid form-group">
+								<div class="col-md-8 offset-md-2">
+									<input class="form-control" id="login_username" placeholder="Username" autofocus required maxlength="254" name="username" type="text">
+								</div>
+								<br><br>
+								<div class="col-md-8 offset-md-2">
+									<input class="form-control" id="password" placeholder="Password" required name="password" type="password">
+								</div>
+								<br><br>
+								<button class="btn btn-default col-md-6 offset-md-3" value="login" type="submit">Login</button>
+								<input type="hidden" name="next" value="/">
+							</div>
+						</form>
+						<br>
+						<div class="col-md-12">
+							<div class="col-md-6 offset-md-6 text-right">
+								<a href="/password_reset/">Oops! I forgot my password...</a>
+							</div>
+						</div>
+						<br>
+			    </div>
+			    <div role="tabpanel" class="tab-pane fade" id="signup">
+						<br>
+						<form method="post" action="/signup.html">
+							<center>
+								<br><br>
+								{% csrf_token %}
+							</center>
+							<div class="container-fluid form-group">
+								<div class="row col-md-12 nomargin">
+									<div class="col-md-6">
+										<input class="form-control" id="first_name" placeholder="First name"  maxlength="30" name="first_name" type="text">
+										{% if 'first_name' in form.errors %}
+											<span style="color:RED">{{ form.first_name.errors.0 }}</span>
+										{% endif %}
+									</div>
+									<div class="col-md-6">
+										<input class="form-control" id="last_name" placeholder="Last name"  maxlength="30" name="last_name" type="text">
+										{% if 'last_name' in form.errors %}
+											<span style="color:RED">{{ form.last_name.errors.0 }}</span>
+										{% endif %}
+									</div>
+								</div>
+								<br>
+								<div class="row col-md-12 nomargin">
+									<div class="col-md-6">
+										<input class="form-control" id="signup_username" placeholder="Username"  maxlength="150" name="username" type="text">
+										{% if 'username' in form.errors %}
+											<span style="color:RED">{{ form.username.errors.0 }}</span>
+										{% endif %}
+									</div>
+									<div class="col-md-6">
+										<input class="form-control" id="email" placeholder="Email ID"  maxlength="254" name="email" type="email">
+										{% if 'email' in form.errors %}
+											<span style="color:RED">{{ form.email.errors.0 }}</span>
+										{% endif %}
+									</div>
+								</div>
+								<br>
+								<div class="row col-md-12 nomargin">
+									<div class="col-md-6">
+										<input class="form-control" id="password1" placeholder="Password"  name="password1" type="password">
+										{% if 'password1' in form.errors %}
+											<span style="color:RED">{{ form.password1.errors.0 }}</span>
+										{% endif %}
+									</div>
+									<div class="col-md-6">
+										<input class="form-control" id="mobile_number" placeholder="Mobile number"  maxlength="10" name="mobile_number" type="text">
+										{% if 'mobile_number' in form.errors %}
+											<span style="color:RED">{{ form.mobile_number.errors.0 }}</span>
+										{% endif %}
+									</div>
+								</div>
+								<br>
+								<div class="row col-md-12 nomargin">
+									<div class="col-md-6">
+										<input class="form-control" id="id_password2" placeholder="Confirm Password"  name="password2" type="password">
+										{% if 'password2' in form.errors %}
+											<span style="color:RED">{{ form.password2.errors.0 }}</span>
+										{% endif %}
+									</div>
+									<div class="col-md-6">
+										<input class="form-control" id="college_name" placeholder="College name"  maxlength="100" name="college_name" type="text">
+										{% if 'college_name' in form.errors %}
+											<span style="color:RED">{{ form.college_name.errors.0 }}</span>
+										{% endif %}
+									</div>
+								</div>
+								<br>
+							</div>
+							<button class="btn btn-default col-md-6 offset-md-3" type="submit">Sign Up</button>
+					</form>
+					<br>
+			    </div>
+			  </div>
+			</div>
+			<br><br>
+		</div>
+
+		<script src="{% static 'js/jquery-3.2.1.min.js' %}" type="text/javascript"></script>
+		<script src="{% static 'js/bootstrap.bundle.min.js' %}" type="text/javascript"></script>
+		<script src="{% static 'js/loginsignup.js' %}" type="text/javascript"></script>
+	</body>
+</html>
